@@ -4,8 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calendar"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         Title="MainWindow" Width="450" Height="450" ResizeMode="NoResize">
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -45,7 +47,7 @@
         <!--Removes border from first row-->
         <Border Grid.Row="0" Grid.ColumnSpan="7" Background="LightGray"/>
 
-        <TextBlock Grid.Column="0" Grid.ColumnSpan="7" Text="&lt; Januar - 2024 &gt;" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="0" Grid.ColumnSpan="7" Text="{Binding CurrentDayOfWeek}" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <!--Creates the title for each column ("Mandag", "Tirsdag", "Onsdag" Etc.)-->
         <Rectangle Grid.Column="0" Grid.Row="1" Fill="LightGray"/>
         <TextBlock Grid.Column="0" Grid.Row="1" Text="MAN" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
