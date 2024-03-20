@@ -16,6 +16,31 @@ namespace Calendar
         private int _currentMonth;
         private int _currentYear;
 
+
+
+
+
+
+        // Working on converting month number into month name (E.g. 2 = Februar, 10 = Oktober)
+        private string _monthNum;
+        public string MonthName
+        {
+            get { return "Testing"; }
+            set
+            {
+                _monthNum = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
+
+
+
+
+
+
         public DateTime CurrentDate
         {
             get { return _currentDate; }
