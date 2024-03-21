@@ -13,28 +13,24 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Height="35">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Rectangle Fill="LightGray"/>
-            <TextBlock Text="{Binding FormattedMonthAndYear, FallbackValue='Year'}" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="4"/>
-        </Grid>
-
-        <Grid Grid.Row="1" Height="35">
-            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Rectangle Fill="LightGray"/>
-            <TextBlock Text="{Binding FormattedDayAndDate, FallbackValue='Month'}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Rectangle Grid.ColumnSpan="3" Fill="LightGray"/>
+
+            <Button Grid.Column="0" Content="&lt;" Width="40" Margin="5"/>
+            <TextBlock Grid.Column="1" Text="{Binding FormattedDate, FallbackValue='Month Year'}" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button Grid.Column="2" Content="&gt;" Width="40" Margin="5"/>
         </Grid>
 
         <!--Grid with name of each day in the week-->
-        <Grid Grid.Row="2" Height="35">
+        <Grid Grid.Row="1" Height="35">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -63,7 +59,7 @@
         </Grid>
 
         <!--Grid with all the days of the month-->
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="3" x:Name="calendarGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -81,119 +77,6 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-
-            <!--Horizontal borders-->
-            <Border Grid.Row="0" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Row="1" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Row="2" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Row="3" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Row="4" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Row="5" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <!--Verticle borders-->
-            <Border Grid.Column="0" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Column="1" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Column="2" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Column="3" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Column="4" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Column="5" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <Border Grid.Column="6" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            
-            <!--WEEKS OF THE MONTH-->
-            <!--Week 1-->
-            <Rectangle Grid.Column="0"  Grid.Row="0"/>
-            <Rectangle Grid.Column="1"  Grid.Row="0"/>
-            <Rectangle Grid.Column="2"  Grid.Row="0"/>
-            <Rectangle Grid.Column="3"  Grid.Row="0"/>
-            <Rectangle Grid.Column="4"  Grid.Row="0"/>
-            <Rectangle Grid.Column="5"  Grid.Row="0"/>
-            <Rectangle Grid.Column="6"  Grid.Row="0"/>
-            <TextBlock Grid.Column="0"  Grid.Row="0" Text="1" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1"  Grid.Row="0" Text="2" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2"  Grid.Row="0" Text="3" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="3"  Grid.Row="0" Text="4" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="4"  Grid.Row="0" Text="5" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="5"  Grid.Row="0" Text="6" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="6"  Grid.Row="0" Text="7" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <!--Week 2-->
-            <Rectangle Grid.Column="0"  Grid.Row="1"/>
-            <Rectangle Grid.Column="1"  Grid.Row="1"/>
-            <Rectangle Grid.Column="2"  Grid.Row="1"/>
-            <Rectangle Grid.Column="3"  Grid.Row="1"/>
-            <Rectangle Grid.Column="4"  Grid.Row="1"/>
-            <Rectangle Grid.Column="5"  Grid.Row="1"/>
-            <Rectangle Grid.Column="6"  Grid.Row="1"/>
-            <TextBlock Grid.Column="0"  Grid.Row="1" Text="8" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1"  Grid.Row="1" Text="9" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2"  Grid.Row="1" Text="10" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="3"  Grid.Row="1" Text="11" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="4"  Grid.Row="1" Text="12" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="5"  Grid.Row="1" Text="13" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="6"  Grid.Row="1" Text="14" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        
-            <!--Week 3-->
-            <Rectangle Grid.Column="0"  Grid.Row="2"/>
-            <Rectangle Grid.Column="1"  Grid.Row="2"/>
-            <Rectangle Grid.Column="2"  Grid.Row="2"/>
-            <Rectangle Grid.Column="3"  Grid.Row="2"/>
-            <Rectangle Grid.Column="4"  Grid.Row="2"/>
-            <Rectangle Grid.Column="5"  Grid.Row="2"/>
-            <Rectangle Grid.Column="6"  Grid.Row="2"/>
-            <TextBlock Grid.Column="0"  Grid.Row="2" Text="15" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1"  Grid.Row="2" Text="16" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2"  Grid.Row="2" Text="17" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="3"  Grid.Row="2" Text="18" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="4"  Grid.Row="2" Text="19" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="5"  Grid.Row="2" Text="20" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="6"  Grid.Row="2" Text="21" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <!--Week 4-->
-            <Rectangle Grid.Column="0"  Grid.Row="3"/>
-            <Rectangle Grid.Column="1"  Grid.Row="3"/>
-            <Rectangle Grid.Column="2"  Grid.Row="3"/>
-            <Rectangle Grid.Column="3"  Grid.Row="3"/>
-            <Rectangle Grid.Column="4"  Grid.Row="3"/>
-            <Rectangle Grid.Column="5"  Grid.Row="3"/>
-            <Rectangle Grid.Column="6"  Grid.Row="3"/>
-            <TextBlock Grid.Column="0"  Grid.Row="3" Text="22" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1"  Grid.Row="3" Text="23" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2"  Grid.Row="3" Text="24" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="3"  Grid.Row="3" Text="25" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="4"  Grid.Row="3" Text="26" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="5"  Grid.Row="3" Text="27" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="6"  Grid.Row="3" Text="28" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <!--Week 5-->
-            <Rectangle Grid.Column="0"  Grid.Row="4"/>
-            <Rectangle Grid.Column="1"  Grid.Row="4"/>
-            <Rectangle Grid.Column="2"  Grid.Row="4"/>
-            <Rectangle Grid.Column="3"  Grid.Row="4" Fill="LightGray"/>
-            <Rectangle Grid.Column="4"  Grid.Row="4" Fill="LightGray"/>
-            <Rectangle Grid.Column="5"  Grid.Row="4" Fill="LightGray"/>
-            <Rectangle Grid.Column="6"  Grid.Row="4" Fill="LightGray"/>
-            <TextBlock Grid.Column="0"  Grid.Row="4" Text="29" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1"  Grid.Row="4" Text="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2"  Grid.Row="4" Text="31" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="3"  Grid.Row="4" Text="1" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="4"  Grid.Row="4" Text="2" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="5"  Grid.Row="4" Text="3" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="6"  Grid.Row="4" Text="4" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <!--Week 6-->
-            <Rectangle Grid.Column="0"  Grid.Row="5" Fill="LightGray"/>
-            <Rectangle Grid.Column="1"  Grid.Row="5" Fill="LightGray"/>
-            <Rectangle Grid.Column="2"  Grid.Row="5" Fill="LightGray"/>
-            <Rectangle Grid.Column="3"  Grid.Row="5" Fill="LightGray"/>
-            <Rectangle Grid.Column="4"  Grid.Row="5" Fill="LightGray"/>
-            <Rectangle Grid.Column="5"  Grid.Row="5" Fill="LightGray"/>
-            <Rectangle Grid.Column="6"  Grid.Row="5" Fill="LightGray"/>
-            <TextBlock Grid.Column="0"  Grid.Row="5" Text="5" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="3"  Grid.Row="5" Text="8" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1"  Grid.Row="5" Text="6" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2"  Grid.Row="5" Text="7" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="4"  Grid.Row="5" Text="9" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="5"  Grid.Row="5" Text="10" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="6"  Grid.Row="5" Text="11" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
         
     </Grid>

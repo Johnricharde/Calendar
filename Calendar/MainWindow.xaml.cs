@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Calendar
 {
@@ -14,14 +16,129 @@ namespace Calendar
         private int _currentMonth;
         private int _currentYear;
 
-        public string FormattedMonthAndYear => $"{CurrentDate.ToString("MMMM yyyy")}";
-        public string FormattedDayAndDate => $"{CurrentDate.ToString("dddd dd")}";
+        public string FormattedDate => $"{CurrentDate.ToString("MMMM yyyy")}";
+
+
+
+
+        private void PopulateCalendarGrid()
+        {
+            int daysInMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
+            DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
+            DayOfWeek firstDayOfWeek = firstDayOfMonth.DayOfWeek;
+            int startingColumn = (int)firstDayOfWeek;
+
+            // Clear existing children of the grid
+            calendarGrid.Children.Clear();
+
+            // Get the last day of the previous month
+            DateTime lastDayOfPreviousMonth = firstDayOfMonth.AddDays(-1);
+
+            // Calculate the number of days from the previous month to display
+            int daysFromPreviousMonth = ((int)firstDayOfWeek + 6) % 7;
+
+            // Populate the calendar grid with the days of the previous month
+            for (int i = daysFromPreviousMonth - 1; i >= 0; i--)
+            {
+                TextBlock dayTextBlock = new TextBlock();
+                dayTextBlock.Text = lastDayOfPreviousMonth.Day.ToString();
+                dayTextBlock.FontSize = 26;
+                dayTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                dayTextBlock.VerticalAlignment = VerticalAlignment.Center;
+
+                // Create a border around the TextBlock
+                Border border = new Border();
+                border.BorderBrush = Brushes.LightGray; // Border color for days from previous month
+                border.BorderThickness = new Thickness(1);
+
+                // Set background color for days from previous month
+                border.Background = Brushes.LightGray;
+
+                // Add the TextBlock to the border
+                border.Child = dayTextBlock;
+
+                // Calculate the row and column for the current day
+                int row = i / 7;
+                int column = i % 7;
+
+                // Add the border to the appropriate cell in the grid
+                Grid.SetRow(border, row);
+                Grid.SetColumn(border, column);
+                calendarGrid.Children.Add(border);
+
+                // Decrement the day for the next iteration
+                lastDayOfPreviousMonth = lastDayOfPreviousMonth.AddDays(-1);
+            }
+
+            // Populate the calendar grid with the days of the current month
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                TextBlock dayTextBlock = new TextBlock();
+                dayTextBlock.Text = day.ToString();
+                dayTextBlock.FontSize = 26;
+                dayTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                dayTextBlock.VerticalAlignment = VerticalAlignment.Center;
+
+                // Create a border around the TextBlock
+                Border border = new Border();
+                border.BorderBrush = Brushes.LightGray; // Border color for days from current month
+                border.BorderThickness = new Thickness(1);
+
+                // Add the TextBlock to the border
+                border.Child = dayTextBlock;
+
+                // Calculate the row and column for the current day
+                int row = (day + daysFromPreviousMonth - 1) / 7;
+                int column = (day + daysFromPreviousMonth - 1) % 7;
+
+                // Add the border to the appropriate cell in the grid
+                Grid.SetRow(border, row);
+                Grid.SetColumn(border, column);
+                calendarGrid.Children.Add(border);
+            }
+
+            // Calculate the number of days from the next month to display
+            int remainingDays = 42 - daysFromPreviousMonth - daysInMonth;
+
+            // Populate the calendar grid with the days of the next month
+            for (int i = 1; i <= remainingDays; i++)
+            {
+                TextBlock dayTextBlock = new TextBlock();
+                dayTextBlock.Text = i.ToString();
+                dayTextBlock.FontSize = 26;
+                dayTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                dayTextBlock.VerticalAlignment = VerticalAlignment.Center;
+
+                // Create a border around the TextBlock
+                Border border = new Border();
+                border.BorderBrush = Brushes.LightGray; // Border color for days from next month
+                border.BorderThickness = new Thickness(1);
+
+                // Set background color for days from next month
+                border.Background = Brushes.LightGray;
+
+                // Add the TextBlock to the border
+                border.Child = dayTextBlock;
+
+                // Calculate the row and column for the current day
+                int row = (daysFromPreviousMonth + daysInMonth + i - 1) / 7;
+                int column = (daysFromPreviousMonth + daysInMonth + i - 1) % 7;
+
+                // Add the border to the appropriate cell in the grid
+                Grid.SetRow(border, row);
+                Grid.SetColumn(border, column);
+                calendarGrid.Children.Add(border);
+            }
+        }
 
 
 
 
 
-        private DateTime CurrentDate
+
+
+
+        public DateTime CurrentDate
         {
             get { return _currentDate; }
             set
@@ -30,7 +147,7 @@ namespace Calendar
                 OnPropertyChanged();
             }
         }
-        private string CurrentDayOfWeek
+        public string CurrentDayOfWeek
         {
             get { return _currentDayOfWeek; }
             set
@@ -39,7 +156,7 @@ namespace Calendar
                 OnPropertyChanged();
             }
         }
-        private int CurrentDay
+        public int CurrentDay
         {
             get { return _currentDay; }
             set
@@ -48,7 +165,7 @@ namespace Calendar
                 OnPropertyChanged();
             }
         }
-        private int CurrentMonth
+        public int CurrentMonth
         {
             get { return _currentMonth; }
             set
@@ -57,7 +174,7 @@ namespace Calendar
                 OnPropertyChanged();
             }
         }
-        private int CurrentYear
+        public int CurrentYear
         {
             get { return _currentYear; }
             set
@@ -77,6 +194,7 @@ namespace Calendar
 
             InitializeComponent();
             DataContext = this;
+            PopulateCalendarGrid();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
