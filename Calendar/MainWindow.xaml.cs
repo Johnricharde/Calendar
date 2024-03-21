@@ -1,13 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace Calendar
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private DateTime _currentDate;
@@ -16,32 +14,14 @@ namespace Calendar
         private int _currentMonth;
         private int _currentYear;
 
+        public string FormattedMonthAndYear => $"{CurrentDate.ToString("MMMM yyyy")}";
+        public string FormattedDayAndDate => $"{CurrentDate.ToString("dddd dd")}";
 
 
 
 
 
-        // Working on converting month number into month name (E.g. 2 = Februar, 10 = Oktober)
-        private string _monthNum;
-        public string MonthName
-        {
-            get { return "Testing"; }
-            set
-            {
-                _monthNum = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-
-
-
-
-
-
-
-        public DateTime CurrentDate
+        private DateTime CurrentDate
         {
             get { return _currentDate; }
             set
@@ -50,7 +30,7 @@ namespace Calendar
                 OnPropertyChanged();
             }
         }
-        public string CurrentDayOfWeek
+        private string CurrentDayOfWeek
         {
             get { return _currentDayOfWeek; }
             set
@@ -59,7 +39,7 @@ namespace Calendar
                 OnPropertyChanged();
             }
         }
-        public int CurrentDay
+        private int CurrentDay
         {
             get { return _currentDay; }
             set
@@ -68,7 +48,7 @@ namespace Calendar
                 OnPropertyChanged();
             }
         }
-        public int CurrentMonth
+        private int CurrentMonth
         {
             get { return _currentMonth; }
             set
@@ -77,7 +57,7 @@ namespace Calendar
                 OnPropertyChanged();
             }
         }
-        public int CurrentYear
+        private int CurrentYear
         {
             get { return _currentYear; }
             set
@@ -96,7 +76,7 @@ namespace Calendar
             CurrentYear = CurrentDate.Year;
 
             InitializeComponent();
-            DataContext = this; // Set the DataContext to this MainWindow instance
+            DataContext = this;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

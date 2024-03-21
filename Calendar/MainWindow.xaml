@@ -9,13 +9,12 @@
         Title="MainWindow" Width="450" Height="450" ResizeMode="NoResize">
 
     <Grid>
+        <!--Grid with current year and current month-->
         <Grid.RowDefinitions>
-            <!-- Rows for additional information -->
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <!-- Row for days -->
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Height="35">
@@ -23,7 +22,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Rectangle Fill="LightGray"/>
-            <TextBlock Text="{Binding CurrentYear}" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="4"/>
+            <TextBlock Text="{Binding FormattedMonthAndYear, FallbackValue='Year'}" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="4"/>
         </Grid>
 
         <Grid Grid.Row="1" Height="35">
@@ -31,9 +30,10 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Rectangle Fill="LightGray"/>
-            <TextBlock Text="{Binding MonthName}" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding FormattedDayAndDate, FallbackValue='Month'}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
+        <!--Grid with name of each day in the week-->
         <Grid Grid.Row="2" Height="35">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -45,7 +45,6 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <!--<TextBlock Grid.Column="0" Grid.ColumnSpan="7" Text="{Binding CurrentDayOfWeek}" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
             <!--Creates the title for each column ("Mandag", "Tirsdag", "Onsdag" Etc.)-->
             <Rectangle Grid.Column="0" Grid.Row="1" Fill="LightGray"/>
             <TextBlock Grid.Column="0" Grid.Row="1" Text="MAN" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -63,6 +62,7 @@
             <TextBlock Grid.Column="6" Grid.Row="1" Text="SØN" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
+        <!--Grid with all the days of the month-->
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -82,14 +82,14 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <!--Rows-->
+            <!--Horizontal borders-->
             <Border Grid.Row="0" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
             <Border Grid.Row="1" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
             <Border Grid.Row="2" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
             <Border Grid.Row="3" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
             <Border Grid.Row="4" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
             <Border Grid.Row="5" Grid.ColumnSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
-            <!--Columns-->
+            <!--Verticle borders-->
             <Border Grid.Column="0" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
             <Border Grid.Column="1" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
             <Border Grid.Column="2" Grid.RowSpan="7" BorderBrush="LightGray" BorderThickness="1"/>
