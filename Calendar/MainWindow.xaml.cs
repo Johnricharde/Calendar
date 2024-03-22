@@ -61,19 +61,23 @@ namespace Calendar
         }
 
 
-        public string FormattedDate => $"{CurrentDate.ToString("MMMM yyyy")}";
-
 
         private void PopulateCalendarGrid()
         {
+            //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
+
+            // Everything should be built around this line
+            DateTime firstDayOfSelectedMonth = new DateTime(2023, 12, 1);
+
+            calendarMonthYear.Text = $"{firstDayOfSelectedMonth.ToString("MMMM yyyy")}";
             int daysInMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
-            DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
 
             calendarGrid.Children.Clear();
 
+
             // Display days from the previous month
-            DateTime dayOfPreviousMonth = firstDayOfMonth.AddDays(-1);
-            int numberOfDaysFromPreviousMonth = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
+            DateTime dayOfPreviousMonth = firstDayOfSelectedMonth.AddDays(-1);
+            int numberOfDaysFromPreviousMonth = ((int)firstDayOfSelectedMonth.DayOfWeek + 6) % 7;
             for (int i = numberOfDaysFromPreviousMonth - 1; i >= 0; i--)
             {
                 AddDayToGrid(

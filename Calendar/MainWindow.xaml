@@ -18,14 +18,14 @@
 
         <Grid Grid.Row="0" Height="35">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
             <Rectangle Grid.ColumnSpan="3" Fill="LightGray"/>
 
             <Button Grid.Column="0" Content="&lt;" Width="40" Margin="5"/>
-            <TextBlock Grid.Column="1" Text="{Binding FormattedDate, FallbackValue='Month Year'}" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" x:Name="calendarMonthYear" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Button Grid.Column="2" Content="&gt;" Width="40" Margin="5"/>
         </Grid>
 
@@ -42,19 +42,13 @@
             </Grid.ColumnDefinitions>
 
             <!--Creates the title for each column ("Mandag", "Tirsdag", "Onsdag" Etc.)-->
-            <Rectangle Grid.Column="0" Grid.Row="1" Fill="LightGray"/>
+            <Rectangle Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="1" Fill="LightGray"/>
             <TextBlock Grid.Column="0" Grid.Row="1" Text="MAN" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Rectangle Grid.Column="1" Grid.Row="1" Fill="LightGray"/>
             <TextBlock Grid.Column="1" Grid.Row="1" Text="TIRS" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Rectangle Grid.Column="2" Grid.Row="1" Fill="LightGray"/>
             <TextBlock Grid.Column="2" Grid.Row="1" Text="ONS" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Rectangle Grid.Column="3" Grid.Row="1" Fill="LightGray"/>
             <TextBlock Grid.Column="3" Grid.Row="1" Text="TORS" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Rectangle Grid.Column="4" Grid.Row="1" Fill="LightGray"/>
             <TextBlock Grid.Column="4" Grid.Row="1" Text="FRE" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Rectangle Grid.Column="5" Grid.Row="1" Fill="LightGray"/>
             <TextBlock Grid.Column="5" Grid.Row="1" Text="LØR" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Rectangle Grid.Column="6" Grid.Row="1" Fill="LightGray"/>
             <TextBlock Grid.Column="6" Grid.Row="1" Text="SØN" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
