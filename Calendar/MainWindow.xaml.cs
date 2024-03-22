@@ -26,19 +26,17 @@ namespace Calendar
             int daysInMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
             DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
             DayOfWeek firstDayOfWeek = firstDayOfMonth.DayOfWeek;
-            int startingColumn = (int)firstDayOfWeek;
+            //int startingColumn = (int)firstDayOfWeek;
 
-            // Clear existing children of the grid
             calendarGrid.Children.Clear();
 
+            // PREVIOUS MONTH //////////////////////////////////////////////////////////////////////////////
             // Get the last day of the previous month
             DateTime lastDayOfPreviousMonth = firstDayOfMonth.AddDays(-1);
-
             // Calculate the number of days from the previous month to display
-            int daysFromPreviousMonth = ((int)firstDayOfWeek + 6) % 7;
-
-            // Populate the calendar grid with the days of the previous month
-            for (int i = daysFromPreviousMonth - 1; i >= 0; i--)
+            int daysFromPreviousMonth = ((int)firstDayOfWeek + 6) % 7;   
+            // Populates the calendar grid with the days of the previous month
+            for (int i = daysFromPreviousMonth - 1; i >= 0; i--) 
             {
                 TextBlock dayTextBlock = new TextBlock();
                 dayTextBlock.Text = lastDayOfPreviousMonth.Day.ToString();
@@ -46,31 +44,26 @@ namespace Calendar
                 dayTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
                 dayTextBlock.VerticalAlignment = VerticalAlignment.Center;
 
-                // Create a border around the TextBlock
-                Border border = new Border();
-                border.BorderBrush = Brushes.LightGray; // Border color for days from previous month
+                // Create border styling for days from previous month
+                Border border = new Border(); 
+                border.BorderBrush = Brushes.LightGray;  
                 border.BorderThickness = new Thickness(1);
-
-                // Set background color for days from previous month
-                border.Background = Brushes.LightGray;
-
-                // Add the TextBlock to the border
-                border.Child = dayTextBlock;
+                border.Background = Brushes.LightGray;   
+                border.Child = dayTextBlock;       
 
                 // Calculate the row and column for the current day
                 int row = i / 7;
                 int column = i % 7;
-
                 // Add the border to the appropriate cell in the grid
                 Grid.SetRow(border, row);
                 Grid.SetColumn(border, column);
                 calendarGrid.Children.Add(border);
-
                 // Decrement the day for the next iteration
                 lastDayOfPreviousMonth = lastDayOfPreviousMonth.AddDays(-1);
             }
 
-            // Populate the calendar grid with the days of the current month
+            // CURRENT MONTH ///////////////////////////////////////////////////////////////////////////////
+            // Populates the calendar grid with the days of the current month
             for (int day = 1; day <= daysInMonth; day++)
             {
                 TextBlock dayTextBlock = new TextBlock();
@@ -79,28 +72,25 @@ namespace Calendar
                 dayTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
                 dayTextBlock.VerticalAlignment = VerticalAlignment.Center;
 
-                // Create a border around the TextBlock
+                // Create border styling for days from current month
                 Border border = new Border();
-                border.BorderBrush = Brushes.LightGray; // Border color for days from current month
+                border.BorderBrush = Brushes.LightGray;
                 border.BorderThickness = new Thickness(1);
-
-                // Add the TextBlock to the border
                 border.Child = dayTextBlock;
 
                 // Calculate the row and column for the current day
                 int row = (day + daysFromPreviousMonth - 1) / 7;
                 int column = (day + daysFromPreviousMonth - 1) % 7;
-
                 // Add the border to the appropriate cell in the grid
                 Grid.SetRow(border, row);
                 Grid.SetColumn(border, column);
                 calendarGrid.Children.Add(border);
             }
 
+            // NEXT MONTH //////////////////////////////////////////////////////////////////////////////////
             // Calculate the number of days from the next month to display
             int remainingDays = 42 - daysFromPreviousMonth - daysInMonth;
-
-            // Populate the calendar grid with the days of the next month
+            // Populates the calendar grid with the days of the next month
             for (int i = 1; i <= remainingDays; i++)
             {
                 TextBlock dayTextBlock = new TextBlock();
@@ -109,21 +99,16 @@ namespace Calendar
                 dayTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
                 dayTextBlock.VerticalAlignment = VerticalAlignment.Center;
 
-                // Create a border around the TextBlock
+                // Create border styling for days from next month
                 Border border = new Border();
-                border.BorderBrush = Brushes.LightGray; // Border color for days from next month
+                border.BorderBrush = Brushes.LightGray;
                 border.BorderThickness = new Thickness(1);
-
-                // Set background color for days from next month
                 border.Background = Brushes.LightGray;
-
-                // Add the TextBlock to the border
                 border.Child = dayTextBlock;
 
                 // Calculate the row and column for the current day
                 int row = (daysFromPreviousMonth + daysInMonth + i - 1) / 7;
                 int column = (daysFromPreviousMonth + daysInMonth + i - 1) % 7;
-
                 // Add the border to the appropriate cell in the grid
                 Grid.SetRow(border, row);
                 Grid.SetColumn(border, column);
