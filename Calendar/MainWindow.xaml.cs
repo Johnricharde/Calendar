@@ -67,9 +67,11 @@ namespace Calendar
             //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
 
             // Everything should be built around this line
-            DateTime firstDayOfSelectedMonth = new DateTime(2023, 12, 1);
+            DateTime firstDayOfSelectedMonth = new DateTime(2023, 10, 1);
 
             calendarMonthYear.Text = $"{firstDayOfSelectedMonth.ToString("MMMM yyyy")}";
+
+            // I should probably figure out why this still works?
             int daysInMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
 
             calendarGrid.Children.Clear();
