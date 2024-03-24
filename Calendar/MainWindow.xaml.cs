@@ -15,13 +15,6 @@ namespace Calendar
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private string _apiKey;
-        public string ApiKey
-        {
-            get { return _apiKey; }
-            set { _apiKey = value; OnPropertyChanged(); }
-        }
-
         private DateTime _currentDate;
         private string _currentDayOfWeek;
         private int _currentDay;
@@ -56,16 +49,6 @@ namespace Calendar
         {
             InitializeComponent();
             DataContext = this;
-
-            // Initialize API key from appsettings.json
-            IConfiguration config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            ApiKey = config["AbstractApi:ApiKey"];
-
-            // Populate the calendar grid
             PopulateCalendarGrid();
         }
 
@@ -80,8 +63,6 @@ namespace Calendar
 
         private void PopulateCalendarGrid()
         {
-            string apiUrl = $"https://holidays.abstractapi.com/v1/?api_key={ApiKey}&country=NO&year={CurrentDate.Year}&month={CurrentDate.Month}";
-
             //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
 
             // Everything should be built around this line
