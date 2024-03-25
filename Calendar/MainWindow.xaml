@@ -24,9 +24,9 @@
             </Grid.ColumnDefinitions>
             <Rectangle Grid.ColumnSpan="3" Fill="LightGray"/>
 
-            <Button Click="NextMonthButton_Click" Grid.Column="0" Content="&lt;" Width="40" Margin="5"/>
+            <Button Click="PreviousMonthButton_Click" Grid.Column="0" Content="&lt;" Width="40" Margin="5"/>
             <TextBlock Grid.Column="1" x:Name="calendarMonthYear" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Button Click="PreviousMonthButton_Click" Grid.Column="2" Content="&gt;" Width="40" Margin="5"/>
+            <Button Click="NextMonthButton_Click" Grid.Column="2" Content="&gt;" Width="40" Margin="5"/>
         </Grid>
 
         <!--Grid with name of each day in the week-->

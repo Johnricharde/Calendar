@@ -139,21 +139,21 @@ namespace Calendar
 
         private void NextMonthButton_Click(object sender, RoutedEventArgs e)
         {
-            CurrentMonth--;
+            CurrentMonth++;
             if (CurrentMonth > 12)
             {
                 CurrentMonth = 1;
-                CurrentYear--;
+                CurrentYear++;
             }
             PopulateCalendarGrid();
         }
         private void PreviousMonthButton_Click(object sender, RoutedEventArgs e)
         {
-            CurrentMonth++;
+            CurrentMonth--;
             if (CurrentMonth < 1)
             {
                 CurrentMonth = 12;
-                CurrentYear++;
+                CurrentYear--;
             }
             PopulateCalendarGrid();
         }
