@@ -11,6 +11,7 @@ using System.Windows.Media;
 using Microsoft.Extensions.Configuration;
 
 
+
 namespace Calendar
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
@@ -57,6 +58,8 @@ namespace Calendar
             CurrentYear = CurrentDate.Year;
             CurrentMonth = CurrentDate.Month;
 
+
+
             PopulateCalendarGrid();
         }
 
@@ -69,8 +72,18 @@ namespace Calendar
 
 
 
-        private void PopulateCalendarGrid()
+        private async void PopulateCalendarGrid()
         {
+            // Read API key from appsettings.json
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+            string apiKey = configuration["AbstractApi:ApiKey"];
+
+            var norwegianHolidaysUrl = $"https://calendarific.com/api/v2/holidays?&api_key={apiKey}&country=NO&year={CurrentYear}&month={CurrentMonth}";
+            List<DateTime> holidayDates = await GetHolidayDates(norwegianHolidaysUrl);
+
             //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
 
             // Everything should be built around this line
@@ -78,8 +91,7 @@ namespace Calendar
 
             calendarMonthYear.Text = $"{firstDayOfSelectedMonth.ToString("MMMM yyyy")}";
 
-            // I should probably figure out why this still works?
-            int daysInMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
+            int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
 
             calendarGrid.Children.Clear();
 
@@ -92,7 +104,8 @@ namespace Calendar
                 AddDayToGrid(
                     dayOfPreviousMonth.Day.ToString(),
                     Brushes.LightGray,
-                    i);
+                    i,
+                    holidayDates);
                 dayOfPreviousMonth = dayOfPreviousMonth.AddDays(-1);
             }
 
@@ -102,7 +115,8 @@ namespace Calendar
                 AddDayToGrid(
                     i.ToString(),
                     Brushes.Transparent,
-                    i + numberOfDaysFromPreviousMonth - 1);
+                    i + numberOfDaysFromPreviousMonth - 1,
+                    holidayDates);
             }
 
             // Display days from the next month
@@ -112,11 +126,12 @@ namespace Calendar
                 AddDayToGrid(
                     i.ToString(),
                     Brushes.LightGray,
-                    numberOfDaysFromPreviousMonth + daysInMonth + i - 1);
+                    numberOfDaysFromPreviousMonth + daysInMonth + i - 1,
+                    holidayDates);
             }
         }
 
-        private void AddDayToGrid(string text, Brush background, int position)
+        private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates)
         {
             TextBlock dayTextBlock = new TextBlock();
             dayTextBlock.Text = text;
@@ -127,14 +142,29 @@ namespace Calendar
             Border border = new Border();
             border.BorderBrush = Brushes.LightGray;
             border.BorderThickness = new Thickness(1);
-            border.Background = background;
             border.Child = dayTextBlock;
 
+            // Check if the day is a holiday
+            DateTime currentDate = DateTime.Parse(text);
+            bool isHoliday = holidayDates.Contains(currentDate.Date);
+            border.Background = isHoliday ? Brushes.Red : background;
             int row = position / 7;
             int column = position % 7;
             Grid.SetRow(border, row);
             Grid.SetColumn(border, column);
             calendarGrid.Children.Add(border);
+        }
+
+        private async Task<List<DateTime>> GetHolidayDates(string norwegianHolidaysUrl)
+        {
+            // Call the API to fetch holiday data for the month or a range of months
+            // Parse the response and extract holiday dates
+            // Return the list of holiday dates
+
+            // Example pseudo-code:
+            // Call the API using norwegianHolidaysUrl
+            // Parse the response to extract holiday dates
+            // Return the list of holiday dates
         }
 
         private void NextMonthButton_Click(object sender, RoutedEventArgs e)
