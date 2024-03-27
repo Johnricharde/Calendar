@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 
 
@@ -145,7 +146,7 @@ namespace Calendar
             border.Child = dayTextBlock;
 
             // Check if the day is a holiday
-            DateTime currentDate = DateTime.Parse(text);
+            DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, int.Parse(text));
             bool isHoliday = holidayDates.Contains(currentDate.Date);
             border.Background = isHoliday ? Brushes.Red : background;
             int row = position / 7;
@@ -157,14 +158,43 @@ namespace Calendar
 
         private async Task<List<DateTime>> GetHolidayDates(string norwegianHolidaysUrl)
         {
-            // Call the API to fetch holiday data for the month or a range of months
-            // Parse the response and extract holiday dates
-            // Return the list of holiday dates
+            List<DateTime> holidayDates = new List<DateTime>();
 
-            // Example pseudo-code:
-            // Call the API using norwegianHolidaysUrl
-            // Parse the response to extract holiday dates
-            // Return the list of holiday dates
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    HttpResponseMessage response = await client.GetAsync(norwegianHolidaysUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonResponse = await response.Content.ReadAsStringAsync();
+                        // Parse JSON response to extract holiday dates
+                        dynamic holidaysData = Newtonsoft.Json.JsonConvert.DeserializeObject(jsonResponse);
+                        if (holidaysData != null && holidaysData.response != null && holidaysData.response.holidays != null)
+                        {
+                            foreach (var holiday in holidaysData.response.holidays)
+                            {
+                                string dateString = holiday.date.iso;
+                                DateTime holidayDate = DateTime.Parse(dateString, CultureInfo.InvariantCulture);
+                                holidayDates.Add(holidayDate.Date);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Handle unsuccessful response
+                        Console.WriteLine("Failed to retrieve holiday data. Status code: " + response.StatusCode);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                Console.WriteLine("Error occurred while fetching holiday data: " + ex.Message);
+            }
+
+            return holidayDates;
         }
 
         private void NextMonthButton_Click(object sender, RoutedEventArgs e)
