@@ -88,7 +88,9 @@ namespace Calendar
             //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
 
             // Everything should be built around this line
-            DateTime firstDayOfSelectedMonth = new DateTime(CurrentYear, CurrentMonth, 1);
+            //DateTime firstDayOfSelectedMonth = new DateTime(CurrentYear, CurrentMonth, 1);
+            DateTime lastDayOfPreviousMonth = new DateTime(CurrentYear, CurrentMonth, 1).AddDays(-1);
+            DateTime firstDayOfSelectedMonth = lastDayOfPreviousMonth.AddDays(1);
 
             calendarMonthYear.Text = $"{firstDayOfSelectedMonth.ToString("MMMM yyyy")}";
 
@@ -98,16 +100,16 @@ namespace Calendar
 
 
             // Display days from the previous month
-            DateTime dayOfPreviousMonth = firstDayOfSelectedMonth.AddDays(-1);
+            DateTime dayOfPreviousMonth = lastDayOfPreviousMonth;
             int numberOfDaysFromPreviousMonth = ((int)firstDayOfSelectedMonth.DayOfWeek + 6) % 7;
-            for (int i = numberOfDaysFromPreviousMonth - 1; i >= 0; i--)
+            for (int i = numberOfDaysFromPreviousMonth; i > 0; i--)
             {
+                dayOfPreviousMonth = dayOfPreviousMonth.AddDays(-1);
                 AddDayToGrid(
                     dayOfPreviousMonth.Day.ToString(),
                     Brushes.LightGray,
-                    i,
+                    i - 1,
                     holidayDates);
-                dayOfPreviousMonth = dayOfPreviousMonth.AddDays(-1);
             }
 
             // Display days from the current month
