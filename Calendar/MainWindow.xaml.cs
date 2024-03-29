@@ -136,6 +136,27 @@ namespace Calendar
 
         private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates)
         {
+            int dayNumber;
+            if (!int.TryParse(text, out dayNumber))
+            {
+                return;
+            }
+            // Ensure CurrentYear and CurrentMonth are set correctly
+            if (CurrentYear <= 0 || CurrentMonth < 1 || CurrentMonth > 12)
+            {
+                return;
+            }
+            // Ensure the parsed day value is within the valid range for the specified month and year
+            int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
+            if (dayNumber < 1 || dayNumber > daysInMonth)
+            {
+                return;
+            }
+
+            // Create DateTime object for the current day
+            DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, dayNumber);
+
+            // Proceed with adding day to the grid
             TextBlock dayTextBlock = new TextBlock();
             dayTextBlock.Text = text;
             dayTextBlock.FontSize = 26;
@@ -148,9 +169,9 @@ namespace Calendar
             border.Child = dayTextBlock;
 
             // Check if the day is a holiday
-            DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, int.Parse(text));
             bool isHoliday = holidayDates.Contains(currentDate.Date);
             border.Background = isHoliday ? Brushes.Red : background;
+
             int row = position / 7;
             int column = position % 7;
             Grid.SetRow(border, row);
@@ -185,14 +206,12 @@ namespace Calendar
                     }
                     else
                     {
-                        // Handle unsuccessful response
                         Console.WriteLine("Failed to retrieve holiday data. Status code: " + response.StatusCode);
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Handle exceptions
                 Console.WriteLine("Error occurred while fetching holiday data: " + ex.Message);
             }
 
