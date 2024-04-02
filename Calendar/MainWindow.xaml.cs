@@ -106,7 +106,7 @@ namespace Calendar
             {
                 dayOfPreviousMonth = dayOfPreviousMonth.AddDays(-1);
                 AddDayToGrid(
-                    dayOfPreviousMonth.Day.ToString(),
+                    (dayOfPreviousMonth.Day + 1).ToString(),
                     Brushes.LightGray,
                     i - 1,
                     holidayDates);
