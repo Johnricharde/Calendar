@@ -47,6 +47,9 @@ namespace Calendar
             get { return _currentYear; }
             set { _currentYear = value; OnPropertyChanged(); }
         }
+
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -64,8 +67,9 @@ namespace Calendar
             PopulateCalendarGrid();
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
 
+
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -88,9 +92,8 @@ namespace Calendar
             //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
 
             // Everything should be built around this line
-            //DateTime firstDayOfSelectedMonth = new DateTime(CurrentYear, CurrentMonth, 1);
-            DateTime lastDayOfPreviousMonth = new DateTime(CurrentYear, CurrentMonth, 1).AddDays(-1);
-            DateTime firstDayOfSelectedMonth = lastDayOfPreviousMonth.AddDays(1);
+            DateTime firstDayOfSelectedMonth = new DateTime(CurrentYear, CurrentMonth, 1);
+            DateTime lastDayOfPreviousMonth = firstDayOfSelectedMonth.AddDays(-1);
 
             calendarMonthYear.Text = $"{firstDayOfSelectedMonth.ToString("MMMM yyyy")}";
 
@@ -98,18 +101,17 @@ namespace Calendar
 
             calendarGrid.Children.Clear();
 
-
             // Display days from the previous month
             DateTime dayOfPreviousMonth = lastDayOfPreviousMonth;
             int numberOfDaysFromPreviousMonth = ((int)firstDayOfSelectedMonth.DayOfWeek + 6) % 7;
             for (int i = numberOfDaysFromPreviousMonth; i > 0; i--)
             {
-                dayOfPreviousMonth = dayOfPreviousMonth.AddDays(-1);
                 AddDayToGrid(
-                    (dayOfPreviousMonth.Day + 1).ToString(),
+                    dayOfPreviousMonth.Day.ToString(),
                     Brushes.LightGray,
                     i - 1,
                     holidayDates);
+                dayOfPreviousMonth = dayOfPreviousMonth.AddDays(-1);
             }
 
             // Display days from the current month
@@ -134,6 +136,8 @@ namespace Calendar
             }
         }
 
+
+
         private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates)
         {
             int dayNumber;
@@ -148,6 +152,7 @@ namespace Calendar
             }
             // Ensure the parsed day value is within the valid range for the specified month and year
             int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
+            // SOMETHING HERE NEEDS FIXING, daysInMonth?
             if (dayNumber < 1 || dayNumber > daysInMonth)
             {
                 return;
@@ -178,6 +183,8 @@ namespace Calendar
             Grid.SetColumn(border, column);
             calendarGrid.Children.Add(border);
         }
+
+
 
         private async Task<List<DateTime>> GetHolidayDates(string norwegianHolidaysUrl)
         {
@@ -217,6 +224,8 @@ namespace Calendar
 
             return holidayDates;
         }
+
+
 
         private void NextMonthButton_Click(object sender, RoutedEventArgs e)
         {
