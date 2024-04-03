@@ -88,15 +88,13 @@ namespace Calendar
             string apiKey = configuration["AbstractApi:ApiKey"];
 
             var norwegianHolidaysUrl = $"https://calendarific.com/api/v2/holidays?&api_key={apiKey}&country=NO&year={CurrentYear}&month={CurrentMonth}";
-            
+
             // Sends a request to the api
             //List<DateTime> holidayDates = await GetHolidayDates(norwegianHolidaysUrl);
 
-            // Initialize a list of DateTime with a single date for testing purposes
-            List<DateTime> holidayDates = new List<DateTime>
-            {
-                new DateTime(2024, 4, 4)
-            };
+            // Initialize a list of DateTimes for testing purposes
+            List<DateTime> holidayDates = await GetHolidayDatesAsync();
+
 
             //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
 
@@ -119,7 +117,8 @@ namespace Calendar
                     dayOfPreviousMonth.Day.ToString(),
                     Brushes.LightGray,
                     i - 1,
-                    holidayDates);
+                    holidayDates,
+                    false);
                 dayOfPreviousMonth = dayOfPreviousMonth.AddDays(-1);
             }
 
@@ -141,39 +140,28 @@ namespace Calendar
                     i.ToString(),
                     Brushes.LightGray,
                     numberOfDaysFromPreviousMonth + daysInMonth + i - 1,
-                    holidayDates);
+                    holidayDates,
+                    false);
             }
         }
 
 
 
-        private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates)
+        private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates, bool isSelectedMonth=true)
         {
-            // Determine the month that comes before the currently selected month
-            int previousMonth = CurrentMonth == 1 ? 12 : CurrentMonth - 1;
-            int previousYear = CurrentMonth == 1 ? CurrentYear - 1 : CurrentYear;
-            int daysInPreviousMonth = DateTime.DaysInMonth(previousYear, previousMonth);
-
-            // Ensure the parsed day value is within the valid range for the specified month and year
             int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
 
             // Create DateTime object for the current day
             DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, daysInMonth);
 
             int dayNumber;
+            // Ensure the parsed day value is within the valid range for the specified month and year
             if (!int.TryParse(text, out dayNumber))
-            {
                 return;
-            }
-            // Ensure CurrentYear and CurrentMonth are set correctly
             if (CurrentYear <= 0 || CurrentMonth < 1 || CurrentMonth > 12)
-            {
                 return;
-            }
             if (dayNumber < 1 || dayNumber > 31)
-            {
                 return;
-            }
 
 
             // Proceed with adding day to the grid
@@ -190,7 +178,16 @@ namespace Calendar
 
             // Check if the day is a holiday
             bool isHoliday = holidayDates.Contains(currentDate.Date);
-            border.Background = isHoliday ? Brushes.Red : background;
+            //border.Background = isHoliday ? Brushes.Red : background;
+            // Testing proof of concept
+            if (isSelectedMonth)
+            {
+                border.Background = (text == "4" || text == "31") ? Brushes.Red : background;
+            }
+            else
+            {
+                border.Background = (text == "4" || text == "31") ? Brushes.DarkGray : background;
+            }
 
             int row = position / 7;
             int column = position % 7;
@@ -238,6 +235,22 @@ namespace Calendar
             }
 
             return holidayDates;
+        }
+
+
+
+        // For testing purposes, DELETE THIS LATER
+        private async Task<List<DateTime>> GetHolidayDatesAsync()
+        {
+            // Simulate fetching holiday dates asynchronously
+            await Task.Delay(100); // Simulate a delay of 100 milliseconds
+
+            // Return a list of DateTime with test holiday dates
+            return new List<DateTime>
+            {
+                new DateTime(2024, 3, 4), // March 4, 2024
+                new DateTime(2024, 12, 25) // December 25, 2024 (example additional holiday date)
+            };
         }
 
 
