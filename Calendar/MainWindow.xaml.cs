@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
@@ -87,7 +88,15 @@ namespace Calendar
             string apiKey = configuration["AbstractApi:ApiKey"];
 
             var norwegianHolidaysUrl = $"https://calendarific.com/api/v2/holidays?&api_key={apiKey}&country=NO&year={CurrentYear}&month={CurrentMonth}";
-            List<DateTime> holidayDates = await GetHolidayDates(norwegianHolidaysUrl);
+            
+            // Sends a request to the api
+            //List<DateTime> holidayDates = await GetHolidayDates(norwegianHolidaysUrl);
+
+            // Initialize a list of DateTime with a single date for testing purposes
+            List<DateTime> holidayDates = new List<DateTime>
+            {
+                new DateTime(2024, 4, 4)
+            };
 
             //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
 
@@ -140,6 +149,17 @@ namespace Calendar
 
         private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates)
         {
+            // Determine the month that comes before the currently selected month
+            int previousMonth = CurrentMonth == 1 ? 12 : CurrentMonth - 1;
+            int previousYear = CurrentMonth == 1 ? CurrentYear - 1 : CurrentYear;
+            int daysInPreviousMonth = DateTime.DaysInMonth(previousYear, previousMonth);
+
+            // Ensure the parsed day value is within the valid range for the specified month and year
+            int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
+
+            // Create DateTime object for the current day
+            DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, daysInMonth);
+
             int dayNumber;
             if (!int.TryParse(text, out dayNumber))
             {
@@ -150,16 +170,11 @@ namespace Calendar
             {
                 return;
             }
-            // Ensure the parsed day value is within the valid range for the specified month and year
-            int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
-            // SOMETHING HERE NEEDS FIXING, daysInMonth?
-            if (dayNumber < 1 || dayNumber > daysInMonth)
+            if (dayNumber < 1 || dayNumber > 31)
             {
                 return;
             }
 
-            // Create DateTime object for the current day
-            DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, dayNumber);
 
             // Proceed with adding day to the grid
             TextBlock dayTextBlock = new TextBlock();
