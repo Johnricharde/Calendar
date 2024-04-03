@@ -87,59 +87,51 @@ namespace Calendar
                 .Build();
             string apiKey = configuration["AbstractApi:ApiKey"];
 
-            var norwegianHolidaysUrl = $"https://calendarific.com/api/v2/holidays?&api_key={apiKey}&country=NO&year={CurrentYear}&month={CurrentMonth}";
-
             // Sends a request to the api
+            //var norwegianHolidaysUrl = $"https://calendarific.com/api/v2/holidays?&api_key={apiKey}&country=NO&year={CurrentYear}&month={CurrentMonth}";
             //List<DateTime> holidayDates = await GetHolidayDates(norwegianHolidaysUrl);
-
             // Initialize a list of DateTimes for testing purposes
             List<DateTime> holidayDates = await GetHolidayDatesAsync();
 
+            DateTime selectedMonthFirstDay = new DateTime(CurrentYear, CurrentMonth, 1);
+            DateTime previousMonthLastDay = selectedMonthFirstDay.AddDays(-1);
 
-            //DateTime firstDayOfMonth = new DateTime(CurrentDate.Year, CurrentDate.Month, 1);
-
-            // Everything should be built around this line
-            DateTime firstDayOfSelectedMonth = new DateTime(CurrentYear, CurrentMonth, 1);
-            DateTime lastDayOfPreviousMonth = firstDayOfSelectedMonth.AddDays(-1);
-
-            calendarMonthYear.Text = $"{firstDayOfSelectedMonth.ToString("MMMM yyyy")}";
-
-            int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
+            int currentMonthDays = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
+            int previousMonthDays = ((int)selectedMonthFirstDay.DayOfWeek + 6) % 7;
+            int remainingDays = 42 - previousMonthDays - currentMonthDays;
 
             calendarGrid.Children.Clear();
+            calendarMonthYear.Text = $"{selectedMonthFirstDay.ToString("MMMM yyyy")}";
 
             // Display days from the previous month
-            DateTime dayOfPreviousMonth = lastDayOfPreviousMonth;
-            int numberOfDaysFromPreviousMonth = ((int)firstDayOfSelectedMonth.DayOfWeek + 6) % 7;
-            for (int i = numberOfDaysFromPreviousMonth; i > 0; i--)
+            for (int i = previousMonthDays; i > 0; i--)
             {
                 AddDayToGrid(
-                    dayOfPreviousMonth.Day.ToString(),
+                    previousMonthLastDay.Day.ToString(),
                     Brushes.LightGray,
                     i - 1,
                     holidayDates,
                     false);
-                dayOfPreviousMonth = dayOfPreviousMonth.AddDays(-1);
+                previousMonthLastDay = previousMonthLastDay.AddDays(-1);
             }
 
             // Display days from the current month
-            for (int i = 1; i <= daysInMonth; i++)
+            for (int i = 1; i <= currentMonthDays; i++)
             {
                 AddDayToGrid(
                     i.ToString(),
                     Brushes.Transparent,
-                    i + numberOfDaysFromPreviousMonth - 1,
+                    i + previousMonthDays - 1,
                     holidayDates);
             }
 
             // Display days from the next month
-            int remainingDays = 42 - numberOfDaysFromPreviousMonth - daysInMonth;
             for (int i = 1; i <= remainingDays; i++)
             {
                 AddDayToGrid(
                     i.ToString(),
                     Brushes.LightGray,
-                    numberOfDaysFromPreviousMonth + daysInMonth + i - 1,
+                    previousMonthDays + currentMonthDays + i - 1,
                     holidayDates,
                     false);
             }
@@ -149,21 +141,6 @@ namespace Calendar
 
         private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates, bool isSelectedMonth=true)
         {
-            int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
-
-            // Create DateTime object for the current day
-            DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, daysInMonth);
-
-            int dayNumber;
-            // Ensure the parsed day value is within the valid range for the specified month and year
-            if (!int.TryParse(text, out dayNumber))
-                return;
-            if (CurrentYear <= 0 || CurrentMonth < 1 || CurrentMonth > 12)
-                return;
-            if (dayNumber < 1 || dayNumber > 31)
-                return;
-
-
             // Proceed with adding day to the grid
             TextBlock dayTextBlock = new TextBlock();
             dayTextBlock.Text = text;
@@ -177,17 +154,16 @@ namespace Calendar
             border.Child = dayTextBlock;
 
             // Check if the day is a holiday
-            bool isHoliday = holidayDates.Contains(currentDate.Date);
+            //int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
+            // Create DateTime object for the current day
+            //DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, daysInMonth);
+            //bool isHoliday = holidayDates.Contains(currentDate.Date);
             //border.Background = isHoliday ? Brushes.Red : background;
             // Testing proof of concept
-            if (isSelectedMonth)
-            {
+            if (background == Brushes.Transparent)
                 border.Background = (text == "4" || text == "31") ? Brushes.Red : background;
-            }
-            else
-            {
+            else if (background == Brushes.LightGray)
                 border.Background = (text == "4" || text == "31") ? Brushes.DarkGray : background;
-            }
 
             int row = position / 7;
             int column = position % 7;
@@ -237,23 +213,16 @@ namespace Calendar
             return holidayDates;
         }
 
-
-
         // For testing purposes, DELETE THIS LATER
         private async Task<List<DateTime>> GetHolidayDatesAsync()
         {
-            // Simulate fetching holiday dates asynchronously
-            await Task.Delay(100); // Simulate a delay of 100 milliseconds
-
-            // Return a list of DateTime with test holiday dates
+            await Task.Delay(100); 
             return new List<DateTime>
             {
-                new DateTime(2024, 3, 4), // March 4, 2024
-                new DateTime(2024, 12, 25) // December 25, 2024 (example additional holiday date)
+                new DateTime(2024, 3, 4),
+                new DateTime(2024, 12, 25)
             };
         }
-
-
 
         private void NextMonthButton_Click(object sender, RoutedEventArgs e)
         {
