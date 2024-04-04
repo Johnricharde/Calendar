@@ -86,7 +86,6 @@ namespace Calendar
                 .AddJsonFile("appsettings.json")
                 .Build();
             string apiKey = configuration["AbstractApi:ApiKey"];
-
             // Sends a request to the api
             //var norwegianHolidaysUrl = $"https://calendarific.com/api/v2/holidays?&api_key={apiKey}&country=NO&year={CurrentYear}&month={CurrentMonth}";
             //List<DateTime> holidayDates = await GetHolidayDates(norwegianHolidaysUrl);
@@ -153,17 +152,19 @@ namespace Calendar
             border.BorderThickness = new Thickness(1);
             border.Child = dayTextBlock;
 
+            // Calculate the date represented by the position
+            DateTime firstDayOfMonth = new DateTime(CurrentYear, CurrentMonth, 1);
+            int daysFromPreviousMonth = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
+            DateTime currentDate = firstDayOfMonth.AddDays(position - daysFromPreviousMonth);
+
             // Check if the day is a holiday
-            //int daysInMonth = DateTime.DaysInMonth(CurrentYear, CurrentMonth);
-            // Create DateTime object for the current day
-            //DateTime currentDate = new DateTime(CurrentYear, CurrentMonth, daysInMonth);
-            //bool isHoliday = holidayDates.Contains(currentDate.Date);
-            //border.Background = isHoliday ? Brushes.Red : background;
+            bool isHoliday = holidayDates.Contains(currentDate.Date);
+
             // Testing proof of concept
             if (background == Brushes.Transparent)
-                border.Background = (text == "4" || text == "31") ? Brushes.Red : background;
+                border.Background = isHoliday ? Brushes.Red : background;
             else if (background == Brushes.LightGray)
-                border.Background = (text == "4" || text == "31") ? Brushes.DarkGray : background;
+                border.Background = isHoliday ? Brushes.DarkGray : background;
 
             int row = position / 7;
             int column = position % 7;
@@ -216,11 +217,21 @@ namespace Calendar
         // For testing purposes, DELETE THIS LATER
         private async Task<List<DateTime>> GetHolidayDatesAsync()
         {
-            await Task.Delay(100); 
+            await Task.Delay(100);
             return new List<DateTime>
             {
-                new DateTime(2024, 3, 4),
-                new DateTime(2024, 12, 25)
+                new DateTime(2024, 1, 1),
+                new DateTime(2024, 3, 28),
+                new DateTime(2024, 3, 29),
+                new DateTime(2024, 3, 31),
+                new DateTime(2024, 4, 1),
+                new DateTime(2024, 4, 6),
+                new DateTime(2024, 5, 1),
+                new DateTime(2024, 5, 17),
+                new DateTime(2024, 5, 30),
+                new DateTime(2024, 6, 9),
+                new DateTime(2024, 12, 25),
+                new DateTime(2024, 12, 26) 
             };
         }
 
