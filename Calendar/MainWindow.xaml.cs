@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -49,7 +50,13 @@ namespace Calendar
             set { _currentYear = value; OnPropertyChanged(); }
         }
 
-
+        public class CalendarEvent
+        {
+            public string Id { get; set; }
+            public string Summary { get; set; }
+            public DateTime StartDate { get; set; }
+            public DateTime EndDate { get; set; }
+        }
 
         public MainWindow()
         {
@@ -85,12 +92,30 @@ namespace Calendar
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
-            string apiKey = configuration["AbstractApi:ApiKey"];
+
+
+
+
+
+            var BASE_CALENDAR_URL = "https://www.googleapis.com/calendar/v3/calendars";
+            var CALENDAR_REGION = "en.norwegian";
+            var BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY = "holiday@group.v.calendar.google.com";
+            var API_KEY = configuration["AbstractApi:ApiKey"];
+
+            var norwegianHolidaysUrl = $"{BASE_CALENDAR_URL}/{CALENDAR_REGION}%23{BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY}/events?key={API_KEY}";
+
+
+
+
             // Sends a request to the api
-            //var norwegianHolidaysUrl = $"https://calendarific.com/api/v2/holidays?&api_key={apiKey}&country=NO&year={CurrentYear}&month={CurrentMonth}";
-            //List<DateTime> holidayDates = await GetHolidayDates(norwegianHolidaysUrl);
+            DateTime? holidayDate = await GetHolidayDate(norwegianHolidaysUrl);
+            List<DateTime> holidayDates = new List<DateTime>();
+            if (holidayDate.HasValue)
+            {
+                holidayDates.Add(holidayDate.Value);
+            }
             // Initialize a list of DateTimes for testing purposes
-            List<DateTime> holidayDates = await GetHolidayDatesAsync();
+            //List<DateTime> holidayDates = await GetHolidayDatesAsync();
 
             DateTime selectedMonthFirstDay = new DateTime(CurrentYear, CurrentMonth, 1);
             DateTime previousMonthLastDay = selectedMonthFirstDay.AddDays(-1);
@@ -175,9 +200,9 @@ namespace Calendar
 
 
 
-        private async Task<List<DateTime>> GetHolidayDates(string norwegianHolidaysUrl)
+        private async Task<DateTime?> GetHolidayDate(string norwegianHolidaysUrl)
         {
-            List<DateTime> holidayDates = new List<DateTime>();
+            DateTime? holidayDate = null;
 
             try
             {
@@ -188,30 +213,27 @@ namespace Calendar
                     if (response.IsSuccessStatusCode)
                     {
                         string jsonResponse = await response.Content.ReadAsStringAsync();
-                        // Parse JSON response to extract holiday dates
-                        dynamic holidaysData = Newtonsoft.Json.JsonConvert.DeserializeObject(jsonResponse);
-                        if (holidaysData != null && holidaysData.response != null && holidaysData.response.holidays != null)
-                        {
-                            foreach (var holiday in holidaysData.response.holidays)
-                            {
-                                string dateString = holiday.date.iso;
-                                DateTime holidayDate = DateTime.Parse(dateString, CultureInfo.InvariantCulture);
-                                holidayDates.Add(holidayDate.Date);
-                            }
-                        }
+                        Debug.WriteLine(jsonResponse);
+
+                        // Parse JSON response to extract holiday date
+                        CalendarEvent holidayEvent = JsonConvert.DeserializeObject<CalendarEvent>(jsonResponse);
+
+                        // Extract start date from the parsed event
+                        holidayDate = holidayEvent?.StartDate.Date;
                     }
                     else
                     {
-                        Console.WriteLine("Failed to retrieve holiday data. Status code: " + response.StatusCode);
+                        Debug.WriteLine("Failed to retrieve holiday data. Status code: " + response.StatusCode);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error occurred while fetching holiday data: " + ex.Message);
+                Debug.WriteLine("Error occurred while fetching holiday data: " + ex.Message);
             }
 
-            return holidayDates;
+            Debug.WriteLine(holidayDate);
+            return holidayDate;
         }
 
         // For testing purposes, DELETE THIS LATER
