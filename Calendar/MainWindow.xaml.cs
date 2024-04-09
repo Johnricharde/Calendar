@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 
@@ -75,9 +76,8 @@ namespace Calendar
             PopulateCalendarGrid();
         }
 
-
-
         public event PropertyChangedEventHandler? PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -93,29 +93,14 @@ namespace Calendar
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-
-
-
-
             var BASE_CALENDAR_URL = "https://www.googleapis.com/calendar/v3/calendars";
-            var CALENDAR_REGION = "en.norwegian";
+            var CALENDAR_REGION = "no.norwegian";
             var BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY = "holiday@group.v.calendar.google.com";
             var API_KEY = configuration["AbstractApi:ApiKey"];
-
-            var norwegianHolidaysUrl = $"{BASE_CALENDAR_URL}/{CALENDAR_REGION}%23{BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY}/events?key={API_KEY}";
-
-
-
+            var HOLIDAYS_URL = $"{BASE_CALENDAR_URL}/{CALENDAR_REGION}%23{BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY}/events?key={API_KEY}";
 
             // Sends a request to the api
-            DateTime? holidayDate = await GetHolidayDate(norwegianHolidaysUrl);
-            List<DateTime> holidayDates = new List<DateTime>();
-            if (holidayDate.HasValue)
-            {
-                holidayDates.Add(holidayDate.Value);
-            }
-            // Initialize a list of DateTimes for testing purposes
-            //List<DateTime> holidayDates = await GetHolidayDatesAsync();
+            List<DateTime> holidayDates = await GetHolidayDates(HOLIDAYS_URL);
 
             DateTime selectedMonthFirstDay = new DateTime(CurrentYear, CurrentMonth, 1);
             DateTime previousMonthLastDay = selectedMonthFirstDay.AddDays(-1);
@@ -134,8 +119,7 @@ namespace Calendar
                     previousMonthLastDay.Day.ToString(),
                     Brushes.LightGray,
                     i - 1,
-                    holidayDates,
-                    false);
+                    holidayDates);
                 previousMonthLastDay = previousMonthLastDay.AddDays(-1);
             }
 
@@ -156,14 +140,13 @@ namespace Calendar
                     i.ToString(),
                     Brushes.LightGray,
                     previousMonthDays + currentMonthDays + i - 1,
-                    holidayDates,
-                    false);
+                    holidayDates);
             }
         }
 
 
 
-        private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates, bool isSelectedMonth=true)
+        private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates)
         {
             // Proceed with adding day to the grid
             TextBlock dayTextBlock = new TextBlock();
@@ -200,62 +183,35 @@ namespace Calendar
 
 
 
-        private async Task<DateTime?> GetHolidayDate(string norwegianHolidaysUrl)
+        static async Task<List<DateTime>> GetHolidayDates(string apiUrl)
         {
-            DateTime? holidayDate = null;
+            List<DateTime> eventDates = new List<DateTime>();
 
-            try
+            using (HttpClient client = new HttpClient())
             {
-                using (HttpClient client = new HttpClient())
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.GetAsync(norwegianHolidaysUrl);
+                    string json = await response.Content.ReadAsStringAsync();
+                    JObject data = JObject.Parse(json);
 
-                    if (response.IsSuccessStatusCode)
+                    foreach (var item in data["items"])
                     {
-                        string jsonResponse = await response.Content.ReadAsStringAsync();
-                        Debug.WriteLine(jsonResponse);
-
-                        // Parse JSON response to extract holiday date
-                        CalendarEvent holidayEvent = JsonConvert.DeserializeObject<CalendarEvent>(jsonResponse);
-
-                        // Extract start date from the parsed event
-                        holidayDate = holidayEvent?.StartDate.Date;
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Failed to retrieve holiday data. Status code: " + response.StatusCode);
+                        DateTime startDate = DateTime.Parse((string)item["start"]["date"]);
+                        eventDates.Add(startDate);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error occurred while fetching holiday data: " + ex.Message);
+                else
+                {
+                    Console.WriteLine("Failed to retrieve data. Status code: " + response.StatusCode);
+                }
             }
 
-            Debug.WriteLine(holidayDate);
-            return holidayDate;
+            return eventDates;
         }
 
-        // For testing purposes, DELETE THIS LATER
-        private async Task<List<DateTime>> GetHolidayDatesAsync()
-        {
-            await Task.Delay(100);
-            return new List<DateTime>
-            {
-                new DateTime(2024, 1, 1),
-                new DateTime(2024, 3, 28),
-                new DateTime(2024, 3, 29),
-                new DateTime(2024, 3, 31),
-                new DateTime(2024, 4, 1),
-                new DateTime(2024, 4, 6),
-                new DateTime(2024, 5, 1),
-                new DateTime(2024, 5, 17),
-                new DateTime(2024, 5, 30),
-                new DateTime(2024, 6, 9),
-                new DateTime(2024, 12, 25),
-                new DateTime(2024, 12, 26) 
-            };
-        }
+
 
         private void NextMonthButton_Click(object sender, RoutedEventArgs e)
         {
