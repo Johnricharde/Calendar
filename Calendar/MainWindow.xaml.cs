@@ -53,8 +53,7 @@ namespace Calendar
 
         public class CalendarEvent
         {
-            public string Id { get; set; }
-            public string Summary { get; set; }
+            public string? Summary { get; set; }
             public DateTime StartDate { get; set; }
             public DateTime EndDate { get; set; }
         }
@@ -100,7 +99,7 @@ namespace Calendar
             var HOLIDAYS_URL = $"{BASE_CALENDAR_URL}/{CALENDAR_REGION}%23{BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY}/events?key={API_KEY}";
 
             // Sends a request to the api
-            List<DateTime> holidayDates = await GetHolidayDates(HOLIDAYS_URL);
+            List<CalendarEvent> holidayDates = await GetHolidayDates(HOLIDAYS_URL);
 
             DateTime selectedMonthFirstDay = new DateTime(CurrentYear, CurrentMonth, 1);
             DateTime previousMonthLastDay = selectedMonthFirstDay.AddDays(-1);
@@ -146,7 +145,7 @@ namespace Calendar
 
 
 
-        private void AddDayToGrid(string text, Brush background, int position, List<DateTime> holidayDates)
+        private void AddDayToGrid(string text, Brush background, int position, List<CalendarEvent> holidayDates)
         {
             // Proceed with adding day to the grid
             TextBlock dayTextBlock = new TextBlock();
@@ -154,6 +153,8 @@ namespace Calendar
             dayTextBlock.FontSize = 26;
             dayTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
             dayTextBlock.VerticalAlignment = VerticalAlignment.Center;
+            dayTextBlock.Padding = new Thickness(5);
+            dayTextBlock.TextWrapping = TextWrapping.Wrap;
 
             Border border = new Border();
             border.BorderBrush = Brushes.LightGray;
@@ -166,13 +167,31 @@ namespace Calendar
             DateTime currentDate = firstDayOfMonth.AddDays(position - daysFromPreviousMonth);
 
             // Check if the day is a holiday
-            bool isHoliday = holidayDates.Contains(currentDate.Date);
+            bool isHoliday = holidayDates.Any(eventItem =>
+                eventItem.StartDate.Date == currentDate.Date
+            );
 
             // Testing proof of concept
             if (background == Brushes.Transparent)
                 border.Background = isHoliday ? Brushes.Red : background;
             else if (background == Brushes.LightGray)
                 border.Background = isHoliday ? Brushes.DarkGray : background;
+
+            if (isHoliday)
+            {
+                // Find the holiday event for the current date
+                CalendarEvent? holidayEvent = holidayDates.FirstOrDefault(eventItem =>
+                    eventItem.StartDate.Date == currentDate.Date);
+
+                // If a holiday event is found, set the text to its summary
+                if (holidayEvent != null)
+                {
+                    dayTextBlock.Text = holidayEvent.Summary;
+                    dayTextBlock.FontSize = 10;
+                    dayTextBlock.FontWeight = FontWeights.SemiBold;
+                    dayTextBlock.Foreground = Brushes.White;
+                }
+            }
 
             int row = position / 7;
             int column = position % 7;
@@ -183,9 +202,9 @@ namespace Calendar
 
 
 
-        static async Task<List<DateTime>> GetHolidayDates(string apiUrl)
+        static async Task<List<CalendarEvent>> GetHolidayDates(string apiUrl)
         {
-            List<DateTime> eventDates = new List<DateTime>();
+            List<CalendarEvent> events = new List<CalendarEvent>();
 
             using (HttpClient client = new HttpClient())
             {
@@ -196,10 +215,20 @@ namespace Calendar
                     string json = await response.Content.ReadAsStringAsync();
                     JObject data = JObject.Parse(json);
 
-                    foreach (var item in data["items"])
+                    foreach (var item in data["items"]!)
                     {
-                        DateTime startDate = DateTime.Parse((string)item["start"]["date"]);
-                        eventDates.Add(startDate);
+                        string summary = (string)item["summary"]!;
+                        DateTime startDate = DateTime.Parse((string)item["start"]!["date"]!);
+                        DateTime endDate = DateTime.Parse((string)item["end"]!["date"]!);
+
+                        CalendarEvent calendarEvent = new CalendarEvent
+                        {
+                            Summary = summary,
+                            StartDate = startDate,
+                            EndDate = endDate
+                        };
+
+                        events.Add(calendarEvent);
                     }
                 }
                 else
@@ -208,7 +237,7 @@ namespace Calendar
                 }
             }
 
-            return eventDates;
+            return events;
         }
 
 
