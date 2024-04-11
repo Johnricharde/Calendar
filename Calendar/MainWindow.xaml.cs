@@ -202,40 +202,120 @@ namespace Calendar
 
 
 
+        //static async Task<List<CalendarEvent>> GetHolidayDates(string apiUrl)
+        //{
+        //    List<CalendarEvent> events = new List<CalendarEvent>();
+
+        //    using (HttpClient client = new HttpClient())
+        //    {
+        //        HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            string json = await response.Content.ReadAsStringAsync();
+        //            JObject data = JObject.Parse(json);
+
+        //            foreach (var item in data["items"]!)
+        //            {
+        //                string summary = (string)item["summary"]!;
+        //                DateTime startDate = DateTime.Parse((string)item["start"]!["date"]!);
+        //                DateTime endDate = DateTime.Parse((string)item["end"]!["date"]!);
+
+        //                CalendarEvent calendarEvent = new CalendarEvent
+        //                {
+        //                    Summary = summary,
+        //                    StartDate = startDate,
+        //                    EndDate = endDate
+        //                };
+
+        //                events.Add(calendarEvent);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("Failed to retrieve data. Status code: " + response.StatusCode);
+        //        }
+        //    }
+
+        //    return events;
+        //}
         static async Task<List<CalendarEvent>> GetHolidayDates(string apiUrl)
         {
-            List<CalendarEvent> events = new List<CalendarEvent>();
-
-            using (HttpClient client = new HttpClient())
+            List<CalendarEvent> events = new List<CalendarEvent>
             {
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
+                new CalendarEvent
                 {
-                    string json = await response.Content.ReadAsStringAsync();
-                    JObject data = JObject.Parse(json);
-
-                    foreach (var item in data["items"]!)
-                    {
-                        string summary = (string)item["summary"]!;
-                        DateTime startDate = DateTime.Parse((string)item["start"]!["date"]!);
-                        DateTime endDate = DateTime.Parse((string)item["end"]!["date"]!);
-
-                        CalendarEvent calendarEvent = new CalendarEvent
-                        {
-                            Summary = summary,
-                            StartDate = startDate,
-                            EndDate = endDate
-                        };
-
-                        events.Add(calendarEvent);
-                    }
-                }
-                else
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 1, 15),
+                    EndDate = new DateTime(2024, 1, 15)
+                },                
+                new CalendarEvent
                 {
-                    Console.WriteLine("Failed to retrieve data. Status code: " + response.StatusCode);
-                }
-            }
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 2, 15),
+                    EndDate = new DateTime(2024, 2, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 3, 15),
+                    EndDate = new DateTime(2024, 3, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 4, 15),
+                    EndDate = new DateTime(2024, 4, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 5, 15),
+                    EndDate = new DateTime(2024, 5, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 6, 15),
+                    EndDate = new DateTime(2024, 6, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 7, 15),
+                    EndDate = new DateTime(2024, 7, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 8, 15),
+                    EndDate = new DateTime(2024, 8, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 9, 15),
+                    EndDate = new DateTime(2024, 9, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 10, 15),
+                    EndDate = new DateTime(2024, 10, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 11, 15),
+                    EndDate = new DateTime(2024, 11, 15)
+                },                
+                new CalendarEvent
+                {
+                    Summary = "Placeholder Holiday",
+                    StartDate = new DateTime(2024, 12, 15),
+                    EndDate = new DateTime(2024, 12, 15)
+                },
+            };
 
             return events;
         }
