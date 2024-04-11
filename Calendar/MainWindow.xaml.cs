@@ -110,6 +110,7 @@ namespace Calendar
 
             calendarGrid.Children.Clear();
             calendarMonthYear.Text = $"{selectedMonthFirstDay.ToString("MMMM yyyy")}";
+            calendarDayMonth.Text = $"{CurrentDate.ToString("dddd dd MMMM yyyy")}";
 
             // Display days from the previous month
             for (int i = previousMonthDays; i > 0; i--)
