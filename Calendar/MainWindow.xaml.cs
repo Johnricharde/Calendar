@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -193,6 +194,21 @@ namespace Calendar
                     dayTextBlock.Foreground = Brushes.White;
                 }
             }
+
+
+
+            // Add click event handler to the day text block
+            border.MouseLeftButtonDown += (sender, e) =>
+            {
+
+                // Handle day selection here
+                DateTime selectedDate = currentDate;
+                // Display selected day on the right-hand side
+                calendarDayMonth.Text = selectedDate.ToString("dddd dd MMMM yyyy");
+                border.Background = Brushes.Yellow;
+            };
+
+
 
             int row = position / 7;
             int column = position % 7;
