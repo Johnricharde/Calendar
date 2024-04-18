@@ -99,14 +99,52 @@
             <Grid Grid.Row="1" Background="#E0E0E0">
                 <TextBlock x:Name="selectedDayName" FontSize="20" FontWeight="Bold" Margin="10,5"/>
                 <TextBlock x:Name="selectedHolidayName" FontSize="16" Margin="10,5"/>
-                <!--<Button Grid.Row="1" Grid.Column="1" FontSize="16" Content="Legg til" Click="AddPlanNoteButton_Click" Margin="10"/>-->
-                <Button Grid.Row="1" Grid.Column="1" Content="Legg til" Margin="10"/>
+                <Button
+            Grid.Row="1" Margin="10" Content="Legg til" Grid.Column="1"/>
             </Grid>
 
             <!-- Events grid -->
             <Grid Grid.Row="2" Background="White">
-                <!-- Add additional UI elements here for displaying events or notes -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Show/Hide Button -->
+                <Button x:Name="showAddEventButton" Content="↓↓↓" HorizontalAlignment="Center" Margin="0 10"/>
+
+                <!-- Add Event UI (Hidden by default) -->
+                <StackPanel x:Name="addEventPanel" Grid.Row="0" Margin="10" Visibility="Collapsed">
+                    <TextBlock Text="Add Event" FontWeight="Bold" FontSize="16"/>
+                    <ComboBox x:Name="eventTitleComboBox" Margin="0 5">
+                        <!-- Add options for event titles -->
+                        <ComboBoxItem Content="Meeting"/>
+                        <ComboBoxItem Content="Appointment"/>
+                        <ComboBoxItem Content="Reminder"/>
+                    </ComboBox>
+                    <TextBox x:Name="eventDescriptionTextBox" Margin="0 5"/>
+                    <DatePicker x:Name="eventDatePicker" Margin="0 5" SelectedDate="{x:Static sys:DateTime.Now}" DisplayDateStart="{x:Static sys:DateTime.Now}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Start Time:" Margin="0 5"/>
+                        <DatePicker x:Name="eventStartTimePicker" Margin="5 5" DisplayDateStart="{x:Static sys:DateTime.Today}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="End Time:" Margin="0 5"/>
+                        <DatePicker x:Name="eventEndTimePicker" Margin="5 5" DisplayDateStart="{x:Static sys:DateTime.Today}"/>
+                    </StackPanel>
+                    <Button Content="Legg til" Margin="0 10"/>
+                </StackPanel>
+
+                <!-- Display Events UI -->
+                <StackPanel Grid.Row="1" Margin="10">
+                    <TextBlock Text="Events" FontWeight="Bold" FontSize="16"/>
+                    <ScrollViewer>
+                        <StackPanel x:Name="eventsStackPanel"/>
+                    </ScrollViewer>
+                </StackPanel>
             </Grid>
+
         </Grid>
     </Grid>
 </Window>

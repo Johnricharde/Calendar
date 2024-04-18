@@ -26,6 +26,8 @@ namespace Calendar
         private int _currentDay;
         private int _currentMonth;
         private int _currentYear;
+        private List<Event> events = new List<Event>();
+
         public DateTime CurrentDate
         {
             get { return _currentDate; }
@@ -52,15 +54,25 @@ namespace Calendar
             set { _currentYear = value; OnPropertyChanged(); }
         }
 
-        public class CalendarEvent
+        public class Holiday
         {
             public string? Summary { get; set; }
             public DateTime StartDate { get; set; }
             public DateTime EndDate { get; set; }
         }
+        public class Event
+        {
+            public string? Title { get; set; }
+            public string? Description { get; set; }
+            public DateTime Date { get; set; }
+            public TimeSpan StartTime { get; set; }
+            public TimeSpan EndTime { get; set; }
+        }
+
 
         public MainWindow()
         {
+
             InitializeComponent();
             DataContext = this;
 
@@ -100,7 +112,7 @@ namespace Calendar
             var HOLIDAYS_URL = $"{BASE_CALENDAR_URL}/{CALENDAR_REGION}%23{BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY}/events?key={API_KEY}";
 
             // Sends a request to the api
-            List<CalendarEvent> holidayDates = await GetHolidayDates(HOLIDAYS_URL);
+            List<Holiday> holidayDates = await GetHolidayDates(HOLIDAYS_URL);
 
             DateTime selectedMonthFirstDay = new DateTime(CurrentYear, CurrentMonth, 1);
             DateTime previousMonthLastDay = selectedMonthFirstDay.AddDays(-1);
@@ -147,7 +159,7 @@ namespace Calendar
 
 
 
-        private void AddDayToGrid(string text, Brush background, int position, List<CalendarEvent> holidayDates)
+        private void AddDayToGrid(string text, Brush background, int position, List<Holiday> holidayDates)
         {
             // Proceed with adding day to the grid
             TextBlock dayTextBlock = new TextBlock();
@@ -182,7 +194,7 @@ namespace Calendar
             if (isHoliday)
             {
                 // Find the holiday event for the current date
-                CalendarEvent? holidayEvent = holidayDates.FirstOrDefault(eventItem =>
+                Holiday? holidayEvent = holidayDates.FirstOrDefault(eventItem =>
                     eventItem.StartDate.Date == currentDate.Date);
 
                 // If a holiday event is found, set the text to its summary
@@ -256,77 +268,77 @@ namespace Calendar
 
         //    return events;
         //}
-        static async Task<List<CalendarEvent>> GetHolidayDates(string apiUrl)
+        static async Task<List<Holiday>> GetHolidayDates(string apiUrl)
         {
-            List<CalendarEvent> events = new List<CalendarEvent>
+            List<Holiday> events = new List<Holiday>
             {
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 1, 15),
                     EndDate = new DateTime(2024, 1, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 2, 15),
                     EndDate = new DateTime(2024, 2, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 3, 15),
                     EndDate = new DateTime(2024, 3, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 4, 15),
                     EndDate = new DateTime(2024, 4, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 5, 15),
                     EndDate = new DateTime(2024, 5, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 6, 15),
                     EndDate = new DateTime(2024, 6, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 7, 15),
                     EndDate = new DateTime(2024, 7, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 8, 15),
                     EndDate = new DateTime(2024, 8, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 9, 15),
                     EndDate = new DateTime(2024, 9, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 10, 15),
                     EndDate = new DateTime(2024, 10, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 11, 15),
                     EndDate = new DateTime(2024, 11, 15)
                 },                
-                new CalendarEvent
+                new Holiday
                 {
                     Summary = "Placeholder Holiday",
                     StartDate = new DateTime(2024, 12, 15),
