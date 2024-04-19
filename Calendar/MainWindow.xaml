@@ -139,9 +139,26 @@
                 <!-- Display Events UI -->
                 <StackPanel Grid.Row="1" Margin="10">
                     <TextBlock Text="Events" FontWeight="Bold" FontSize="16"/>
-                    <ScrollViewer>
-                        <StackPanel x:Name="eventsStackPanel"/>
-                    </ScrollViewer>
+                    <ListBox Grid.Column="1" ItemsSource="{Binding TestEvents}" Margin="10">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0 0 0 10">
+                                    <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                                    <TextBlock>
+                                        <Run Text="Date: "/>
+                                        <Run Text="{Binding Date, StringFormat='dd MMMM yyyy'}"/>
+                                    </TextBlock>
+                                    <TextBlock>
+                                        <Run Text="Time: "/>
+                                        <Run Text="{Binding StartTime, StringFormat='hh\\:mm tt'}"/>
+                                        <Run Text=" - "/>
+                                        <Run Text="{Binding EndTime, StringFormat='hh\\:mm tt'}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
             </Grid>
 

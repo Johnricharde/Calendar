@@ -69,12 +69,44 @@ namespace Calendar
             public TimeSpan EndTime { get; set; }
         }
 
+        public List<Event> TestEvents { get; set; }
 
         public MainWindow()
         {
 
             InitializeComponent();
+
             DataContext = this;
+
+            // Sample events for testing purposes
+            TestEvents = new List<Event>
+            {
+                new Event
+                {
+                    Title = "Meeting with Client",
+                    Description = "Discuss project requirements",
+                    Date = new DateTime(2024, 4, 17),
+                    StartTime = new TimeSpan(10, 0, 0),
+                    EndTime = new TimeSpan(11, 0, 0)
+                },
+                new Event
+                {
+                    Title = "Team Lunch",
+                    Description = "Celebrating a successful project",
+                    Date = new DateTime(2024, 4, 18),
+                    StartTime = new TimeSpan(12, 0, 0),
+                    EndTime = new TimeSpan(13, 0, 0)
+                },
+                new Event
+                {
+                    Title = "Training Session",
+                    Description = "New employee orientation",
+                    Date = new DateTime(2024, 4, 19),
+                    StartTime = new TimeSpan(9, 0, 0),
+                    EndTime = new TimeSpan(12, 0, 0)
+                }
+            };
+
 
             // Set default values for CurrentDate
             CurrentDate = DateTime.Today;
