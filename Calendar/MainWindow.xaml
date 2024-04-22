@@ -99,8 +99,8 @@
             <Grid Grid.Row="1" Background="#E0E0E0">
                 <TextBlock x:Name="selectedDayName" FontSize="20" FontWeight="Bold" Margin="10,5"/>
                 <TextBlock x:Name="selectedHolidayName" FontSize="16" Margin="10,5"/>
-                <Button
-            Grid.Row="1" Margin="10" Content="Legg til" Grid.Column="1"/>
+                <!-- Show/Hide Button -->
+                <Button Grid.Row="1" Margin="10" Click="ToggleAddEventPanelButton_Click" Content="↓↓↓" Grid.Column="1"/>
             </Grid>
 
             <!-- Events grid -->
@@ -111,33 +111,115 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Show/Hide Button -->
-                <Button x:Name="showAddEventButton" Content="↓↓↓" HorizontalAlignment="Center" Margin="0 10"/>
-
-                <!-- Add Event UI (Hidden by default) -->
-                <StackPanel x:Name="addEventPanel" Grid.Row="0" Margin="10" Visibility="Collapsed">
-                    <TextBlock Text="Add Event" FontWeight="Bold" FontSize="16"/>
-                    <ComboBox x:Name="eventTitleComboBox" Margin="0 5">
-                        <!-- Add options for event titles -->
-                        <ComboBoxItem Content="Meeting"/>
-                        <ComboBoxItem Content="Appointment"/>
-                        <ComboBoxItem Content="Reminder"/>
-                    </ComboBox>
-                    <TextBox x:Name="eventDescriptionTextBox" Margin="0 5"/>
-                    <DatePicker x:Name="eventDatePicker" Margin="0 5" SelectedDate="{x:Static sys:DateTime.Now}" DisplayDateStart="{x:Static sys:DateTime.Now}"/>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Start Time:" Margin="0 5"/>
-                        <DatePicker x:Name="eventStartTimePicker" Margin="5 5" DisplayDateStart="{x:Static sys:DateTime.Today}"/>
+                <!-- Add Event UI -->
+                <StackPanel x:Name="addEventPanel" Grid.Row="1" Margin="10" Visibility="Collapsed">
+                    <StackPanel Margin="0 5">
+                        <TextBlock Text="Title:"/>
+                        <TextBox x:Name="eventTitleTextBox" Margin="0 5"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="End Time:" Margin="0 5"/>
-                        <DatePicker x:Name="eventEndTimePicker" Margin="5 5" DisplayDateStart="{x:Static sys:DateTime.Today}"/>
+                    <StackPanel Margin="0 5">
+                        <TextBlock Text="Description:"/>
+                        <TextBox x:Name="eventDescriptionTextBox" Margin="0 5"/>
                     </StackPanel>
-                    <Button Content="Legg til" Margin="0 10"/>
+                    <StackPanel Margin="0 5">
+                        <TextBlock Text="Date:"/>
+                        <DatePicker x:Name="eventDatePicker" Margin="0 5" SelectedDate="{Binding CurrentDate}" DisplayDateStart="{Binding CurrentDate}"/>
+                    </StackPanel>
+                    <StackPanel Margin="0 5">
+                        <TextBlock Text="Start Time:"/>
+                        <ComboBox x:Name="eventStartTimeComboBox" Margin="0 5">
+                            <!-- Populate with time options -->
+                            <ComboBoxItem Content="05:00"/>
+                            <ComboBoxItem Content="05:30"/>
+                            <ComboBoxItem Content="06:00"/>
+                            <ComboBoxItem Content="06:30"/>
+                            <ComboBoxItem Content="07:00"/>
+                            <ComboBoxItem Content="07:30"/>
+                            <ComboBoxItem Content="08:00"/>
+                            <ComboBoxItem Content="08:30"/>
+                            <ComboBoxItem Content="09:00"/>
+                            <ComboBoxItem Content="09:30"/>
+                            <ComboBoxItem Content="10:00"/>
+                            <ComboBoxItem Content="10:30"/>
+                            <ComboBoxItem Content="11:00"/>
+                            <ComboBoxItem Content="11:30"/>
+                            <ComboBoxItem Content="12:00"/>
+                            <ComboBoxItem Content="12:30"/>
+                            <ComboBoxItem Content="13:00"/>
+                            <ComboBoxItem Content="13:30"/>
+                            <ComboBoxItem Content="14:00"/>
+                            <ComboBoxItem Content="14:30"/>
+                            <ComboBoxItem Content="15:00"/>
+                            <ComboBoxItem Content="15:30"/>
+                            <ComboBoxItem Content="16:00"/>
+                            <ComboBoxItem Content="16:30"/>
+                            <ComboBoxItem Content="17:00"/>
+                            <ComboBoxItem Content="17:30"/>
+                            <ComboBoxItem Content="18:00"/>
+                            <ComboBoxItem Content="18:30"/>
+                            <ComboBoxItem Content="19:00"/>
+                            <ComboBoxItem Content="19:30"/>
+                            <ComboBoxItem Content="20:00"/>
+                            <ComboBoxItem Content="20:30"/>
+                            <ComboBoxItem Content="21:00"/>
+                            <ComboBoxItem Content="21:30"/>
+                            <ComboBoxItem Content="22:00"/>
+                            <ComboBoxItem Content="22:30"/>
+                            <ComboBoxItem Content="23:00"/>
+                            <ComboBoxItem Content="23:30"/>
+                            <!-- Add more time options as needed -->
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Margin="0 5">
+                        <TextBlock Text="End Time:"/>
+                        <ComboBox x:Name="eventEndTimeComboBox" Margin="0 5">
+                            <!-- Populate with time options -->
+                            <ComboBoxItem Content="05:00"/>
+                            <ComboBoxItem Content="05:30"/>
+                            <ComboBoxItem Content="06:00"/>
+                            <ComboBoxItem Content="06:30"/>
+                            <ComboBoxItem Content="07:00"/>
+                            <ComboBoxItem Content="07:30"/>
+                            <ComboBoxItem Content="08:00"/>
+                            <ComboBoxItem Content="08:30"/>
+                            <ComboBoxItem Content="09:00"/>
+                            <ComboBoxItem Content="09:30"/>
+                            <ComboBoxItem Content="10:00"/>
+                            <ComboBoxItem Content="10:30"/>
+                            <ComboBoxItem Content="11:00"/>
+                            <ComboBoxItem Content="11:30"/>
+                            <ComboBoxItem Content="12:00"/>
+                            <ComboBoxItem Content="12:30"/>
+                            <ComboBoxItem Content="13:00"/>
+                            <ComboBoxItem Content="13:30"/>
+                            <ComboBoxItem Content="14:00"/>
+                            <ComboBoxItem Content="14:30"/>
+                            <ComboBoxItem Content="15:00"/>
+                            <ComboBoxItem Content="15:30"/>
+                            <ComboBoxItem Content="16:00"/>
+                            <ComboBoxItem Content="16:30"/>
+                            <ComboBoxItem Content="17:00"/>
+                            <ComboBoxItem Content="17:30"/>
+                            <ComboBoxItem Content="18:00"/>
+                            <ComboBoxItem Content="18:30"/>
+                            <ComboBoxItem Content="19:00"/>
+                            <ComboBoxItem Content="19:30"/>
+                            <ComboBoxItem Content="20:00"/>
+                            <ComboBoxItem Content="20:30"/>
+                            <ComboBoxItem Content="21:00"/>
+                            <ComboBoxItem Content="21:30"/>
+                            <ComboBoxItem Content="22:00"/>
+                            <ComboBoxItem Content="22:30"/>
+                            <ComboBoxItem Content="23:00"/>
+                            <ComboBoxItem Content="23:30"/>
+                            <!-- Add more time options as needed -->
+                        </ComboBox>
+                    </StackPanel>
+                    <Button Content="Add" Margin="0 10" Click="AddEvent_Click"/>
                 </StackPanel>
 
                 <!-- Display Events UI -->
-                <StackPanel Grid.Row="1" Margin="10">
+                <StackPanel x:Name="eventListDisplay" Grid.Row="1" Margin="10">
                     <TextBlock Text="Events" FontWeight="Bold" FontSize="16"/>
                     <ListBox Grid.Column="1" ItemsSource="{Binding TestEvents}" Margin="10">
                         <ListBox.ItemTemplate>

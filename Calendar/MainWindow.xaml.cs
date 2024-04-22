@@ -97,14 +97,6 @@ namespace Calendar
                     StartTime = new TimeSpan(12, 0, 0),
                     EndTime = new TimeSpan(13, 0, 0)
                 },
-                new Event
-                {
-                    Title = "Training Session",
-                    Description = "New employee orientation",
-                    Date = new DateTime(2024, 4, 19),
-                    StartTime = new TimeSpan(9, 0, 0),
-                    EndTime = new TimeSpan(12, 0, 0)
-                }
             };
 
 
@@ -403,5 +395,30 @@ namespace Calendar
             }
             PopulateCalendarGrid();
         }
+        private void AddEvent_Click(object sender, RoutedEventArgs e)
+        {
+            // Create a new event based on input fields
+            Event newEvent = new Event
+            {
+                Title = eventTitleTextBox.Text,
+                Description = eventDescriptionTextBox.Text,
+                Date = eventDatePicker.SelectedDate ?? DateTime.Today,
+                StartTime = TimeSpan.Parse((eventStartTimeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString()),
+                EndTime = TimeSpan.Parse((eventEndTimeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString())
+            };
+
+            // Add the new event to the list of events
+            TestEvents.Add(newEvent);
+
+            // Refresh the display
+            PopulateCalendarGrid();
+        }
+
+        private void ToggleAddEventPanelButton_Click(object sender, RoutedEventArgs e)
+        {
+            addEventPanel.Visibility = (addEventPanel.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+            eventListDisplay.Visibility = (eventListDisplay.Visibility == Visibility.Collapsed) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
     }
 }
