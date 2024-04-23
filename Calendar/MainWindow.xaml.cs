@@ -3,7 +3,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Microsoft.Extensions.Configuration;
 
 
@@ -45,7 +47,6 @@ namespace Calendar
             set { _currentYear = value; OnPropertyChanged(); }
         }
 
-
         public class Holiday
         {
             public string? Summary { get; set; }
@@ -53,6 +54,8 @@ namespace Calendar
             public DateTime EndDate { get; set; }
         }
 
+        private bool isDragging = false;
+        private Point lastPosition;
 
         public MainWindow()
         {
@@ -337,5 +340,11 @@ namespace Calendar
             }
             PopulateCalendarGrid();
         }
+        private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+
     }
 }
