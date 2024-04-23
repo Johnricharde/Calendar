@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Net.Http;
 using System.Runtime.CompilerServices;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 
 
@@ -26,7 +17,7 @@ namespace Calendar
         private int _currentDay;
         private int _currentMonth;
         private int _currentYear;
-        private List<Event> events = new List<Event>();
+
 
         public DateTime CurrentDate
         {
@@ -54,22 +45,14 @@ namespace Calendar
             set { _currentYear = value; OnPropertyChanged(); }
         }
 
+
         public class Holiday
         {
             public string? Summary { get; set; }
             public DateTime StartDate { get; set; }
             public DateTime EndDate { get; set; }
         }
-        public class Event
-        {
-            public string? Title { get; set; }
-            public string? Description { get; set; }
-            public DateTime Date { get; set; }
-            public TimeSpan StartTime { get; set; }
-            public TimeSpan EndTime { get; set; }
-        }
 
-        public List<Event> TestEvents { get; set; }
 
         public MainWindow()
         {
@@ -78,28 +61,6 @@ namespace Calendar
 
             DataContext = this;
 
-            // Sample events for testing purposes
-            TestEvents = new List<Event>
-            {
-                new Event
-                {
-                    Title = "Meeting with Client",
-                    Description = "Discuss project requirements",
-                    Date = new DateTime(2024, 4, 17),
-                    StartTime = new TimeSpan(10, 0, 0),
-                    EndTime = new TimeSpan(11, 0, 0)
-                },
-                new Event
-                {
-                    Title = "Team Lunch",
-                    Description = "Celebrating a successful project",
-                    Date = new DateTime(2024, 4, 18),
-                    StartTime = new TimeSpan(12, 0, 0),
-                    EndTime = new TimeSpan(13, 0, 0)
-                },
-            };
-
-
             // Set default values for CurrentDate
             CurrentDate = DateTime.Today;
 
@@ -107,18 +68,17 @@ namespace Calendar
             CurrentYear = CurrentDate.Year;
             CurrentMonth = CurrentDate.Month;
 
-
-
             PopulateCalendarGrid();
         }
 
+
         public event PropertyChangedEventHandler? PropertyChanged;
+
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
 
 
         private async void PopulateCalendarGrid()
@@ -147,7 +107,6 @@ namespace Calendar
 
             calendarGrid.Children.Clear();
             calendarMonthYear.Text = $"{selectedMonthFirstDay.ToString("MMMM yyyy")}";
-            calendarDayMonth.Text = $"{CurrentDate.ToString("dddd dd MMMM yyyy")}";
 
             // Display days from the previous month
             for (int i = previousMonthDays; i > 0; i--)
@@ -180,7 +139,6 @@ namespace Calendar
                     holidayDates);
             }
         }
-
 
 
         private void AddDayToGrid(string text, Brush background, int position, List<Holiday> holidayDates)
@@ -230,21 +188,6 @@ namespace Calendar
                     dayTextBlock.Foreground = Brushes.White;
                 }
             }
-
-
-
-            // Add click event handler to the day text block
-            border.MouseLeftButtonDown += (sender, e) =>
-            {
-
-                // Handle day selection here
-                DateTime selectedDate = currentDate;
-                // Display selected day on the right-hand side
-                calendarDayMonth.Text = selectedDate.ToString("dddd dd MMMM yyyy");
-                border.Background = Brushes.Yellow;
-            };
-
-
 
             int row = position / 7;
             int column = position % 7;
@@ -374,7 +317,6 @@ namespace Calendar
         }
 
 
-
         private void NextMonthButton_Click(object sender, RoutedEventArgs e)
         {
             CurrentMonth++;
@@ -395,30 +337,5 @@ namespace Calendar
             }
             PopulateCalendarGrid();
         }
-        private void AddEvent_Click(object sender, RoutedEventArgs e)
-        {
-            // Create a new event based on input fields
-            Event newEvent = new Event
-            {
-                Title = eventTitleTextBox.Text,
-                Description = eventDescriptionTextBox.Text,
-                Date = eventDatePicker.SelectedDate ?? DateTime.Today,
-                StartTime = TimeSpan.Parse((eventStartTimeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString()),
-                EndTime = TimeSpan.Parse((eventEndTimeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString())
-            };
-
-            // Add the new event to the list of events
-            TestEvents.Add(newEvent);
-
-            // Refresh the display
-            PopulateCalendarGrid();
-        }
-
-        private void ToggleAddEventPanelButton_Click(object sender, RoutedEventArgs e)
-        {
-            addEventPanel.Visibility = (addEventPanel.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
-            eventListDisplay.Visibility = (eventListDisplay.Visibility == Visibility.Collapsed) ? Visibility.Visible : Visibility.Collapsed;
-        }
-
     }
 }
