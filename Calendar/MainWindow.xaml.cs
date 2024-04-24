@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 
 
@@ -19,7 +21,6 @@ namespace Calendar
         private int _currentDay;
         private int _currentMonth;
         private int _currentYear;
-
 
         public DateTime CurrentDate
         {
@@ -54,13 +55,19 @@ namespace Calendar
             public DateTime EndDate { get; set; }
         }
 
-        private bool isDragging = false;
-        private Point lastPosition;
 
         public MainWindow()
         {
 
             InitializeComponent();
+
+            // Set the window position to the bottom-right corner of the screen
+            this.WindowStartupLocation = WindowStartupLocation.Manual;
+            // Get the working area of the screen (excluding taskbar)
+            var workingArea = SystemParameters.WorkArea;
+            // Adjust the window position considering taskbar height
+            this.Left = workingArea.Right - this.Width;
+            this.Top = workingArea.Bottom - this.Height;
 
             DataContext = this;
 
@@ -200,121 +207,40 @@ namespace Calendar
         }
 
 
-
-        //static async Task<List<CalendarEvent>> GetHolidayDates(string apiUrl)
-        //{
-        //    List<CalendarEvent> events = new List<CalendarEvent>();
-
-        //    using (HttpClient client = new HttpClient())
-        //    {
-        //        HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            string json = await response.Content.ReadAsStringAsync();
-        //            JObject data = JObject.Parse(json);
-
-        //            foreach (var item in data["items"]!)
-        //            {
-        //                string summary = (string)item["summary"]!;
-        //                DateTime startDate = DateTime.Parse((string)item["start"]!["date"]!);
-        //                DateTime endDate = DateTime.Parse((string)item["end"]!["date"]!);
-
-        //                CalendarEvent calendarEvent = new CalendarEvent
-        //                {
-        //                    Summary = summary,
-        //                    StartDate = startDate,
-        //                    EndDate = endDate
-        //                };
-
-        //                events.Add(calendarEvent);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("Failed to retrieve data. Status code: " + response.StatusCode);
-        //        }
-        //    }
-
-        //    return events;
-        //}
         static async Task<List<Holiday>> GetHolidayDates(string apiUrl)
         {
-            List<Holiday> events = new List<Holiday>
+            List<Holiday> events = new List<Holiday>();
+
+            using (HttpClient client = new HttpClient())
             {
-                new Holiday
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 1, 15),
-                    EndDate = new DateTime(2024, 1, 15)
-                },                
-                new Holiday
+                    string json = await response.Content.ReadAsStringAsync();
+                    JObject data = JObject.Parse(json);
+
+                    foreach (var item in data["items"]!)
+                    {
+                        string summary = (string)item["summary"]!;
+                        DateTime startDate = DateTime.Parse((string)item["start"]!["date"]!);
+                        DateTime endDate = DateTime.Parse((string)item["end"]!["date"]!);
+
+                        Holiday calendarEvent = new Holiday
+                        {
+                            Summary = summary,
+                            StartDate = startDate,
+                            EndDate = endDate
+                        };
+
+                        events.Add(calendarEvent);
+                    }
+                }
+                else
                 {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 2, 15),
-                    EndDate = new DateTime(2024, 2, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 3, 15),
-                    EndDate = new DateTime(2024, 3, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 4, 15),
-                    EndDate = new DateTime(2024, 4, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 5, 15),
-                    EndDate = new DateTime(2024, 5, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 6, 15),
-                    EndDate = new DateTime(2024, 6, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 7, 15),
-                    EndDate = new DateTime(2024, 7, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 8, 15),
-                    EndDate = new DateTime(2024, 8, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 9, 15),
-                    EndDate = new DateTime(2024, 9, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 10, 15),
-                    EndDate = new DateTime(2024, 10, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 11, 15),
-                    EndDate = new DateTime(2024, 11, 15)
-                },                
-                new Holiday
-                {
-                    Summary = "Placeholder Holiday",
-                    StartDate = new DateTime(2024, 12, 15),
-                    EndDate = new DateTime(2024, 12, 15)
-                },
-            };
+                    Console.WriteLine("Failed to retrieve data. Status code: " + response.StatusCode);
+                }
+            }
 
             return events;
         }
