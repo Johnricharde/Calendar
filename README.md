@@ -15,10 +15,9 @@ It's very similiar to most other calendar apps such as the default windows calen
   
 ### Lessons learned:
 - Familiarized myself more with C#, XAML and APIs.
-- Learnt more about working with DateTime.
+- Learnt more about working with DateTimes.
 - Learnt to build a WPF application.
 - Encountered new problems that were unique to this project in regards to DateTimes.
-- Learnt about the slippery slop of technical debt.
 
 
 ## MIT License
