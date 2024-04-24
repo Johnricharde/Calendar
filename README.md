@@ -8,7 +8,7 @@ It's very similiar to most other calendar apps such as the default windows calen
 - C#
 - WPF
   
-![Skjermbilde 2024-04-24 134410](https://github.com/Johnricharde/Calendar/assets/117681128/ef31fb68-782a-49b3-87ff-6fbc653c7d3f)
+  ![Skjermbilde 2024-04-24 141201](https://github.com/Johnricharde/Calendar/assets/117681128/72d77a28-6247-4da6-906f-46b51819469a)
 
 ### Acknowledgements:
 - This app uses the Google Calendar API in order to retrieve norwegian holidays: https://developers.google.com/calendar/api/guides/overview
