@@ -14,11 +14,11 @@ It's very similiar to most other calendar apps such as the default windows calen
 - This app uses the Google Calendar API in order to retrieve norwegian holidays: https://developers.google.com/calendar/api/guides/overview
   
 ### Lessons learned:
-Familiarized myself more with C#, XAML and APIs.
-Learnt more about working with DateTime.
-Learnt to build a WPF application.
-Encountered new problems that were unique to this project in regards to DateTimes.
-Learnt about the slippery slop of technical debt.
+- Familiarized myself more with C#, XAML and APIs.
+- Learnt more about working with DateTime.
+- Learnt to build a WPF application.
+- Encountered new problems that were unique to this project in regards to DateTimes.
+- Learnt about the slippery slop of technical debt.
 
 
 ## MIT License
