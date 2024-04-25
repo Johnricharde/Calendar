@@ -9,6 +9,7 @@ It's very similiar to most other calendar apps such as the default windows calen
 - Visual Studio
 - C#
 - WPF
+- .NET
 
 ### Acknowledgements:
 - This app uses the Google Calendar API in order to retrieve norwegian holidays: https://developers.google.com/calendar/api/guides/overview
